@@ -1,0 +1,244 @@
+@media only screen and (orientation: landscape){
+    div.list span {
+        font-size: medium;
+        font-family: circula;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    display {
+        display: block;
+        float: right;
+        padding-right: 1%;
+        padding-left: 1%;
+        width: 83%;
+        padding-top: 3em;
+        padding-bottom: calc(3em + 1%);
+    }
+    panel {
+        left: 0%;
+        right: 0%;
+        position: fixed;
+        top: 0%;
+        height: auto;
+        display: flex;
+        z-index: 100;
+        font-size: x-large;
+        align-items: center;
+        background-color: black;
+    }
+    panel div {
+        display: inline-flex;
+        align-items: center;
+        height: 100%;
+    }
+    panel img {
+        height: 50px;
+    }
+    panel>div {
+        width: 100%;
+    }
+    panel>div>div {
+        width: calc(100% / 3);
+    }
+    panel>div>div>div {
+        width: 100%;
+        text-align: center;
+        display: inline-block;
+    }
+    panel button {
+        height: 100%;
+        font-size: large;
+        border-radius: 5px;
+        margin: auto;
+        border: none;
+        outline: none;
+        background-clip: text;
+        -webkit-background-clip: text;
+        background-image: var(--audhub-gradient);
+        font-weight: bold;
+        appearance: none;
+        -webkit-text-fill-color: transparent;
+    }
+    panel span{
+        background-clip: text;
+        -webkit-background-clip: text;
+        background-image: var(--audhub-gradient);
+        font-weight: bold;
+        appearance: none;
+        -webkit-text-fill-color: transparent;
+    }
+    panel input {
+        width: 100%;
+        background-color: #111;
+        border: none;
+        outline: none;
+        font-size: medium;
+        padding: 7px;
+        border-radius: 10px;
+        color: white;
+        text-align: center;
+    }
+    panel input::placeholder {
+        color: white;
+    }
+    panel>div>div+div+div {
+        display: inline-block;
+        text-align: right;
+    }
+    panel>div>div+div+div>div {
+        display: flex;
+        width: 40%;
+        float: right;
+        align-items: center;
+    }
+    panel a {
+        display:contents;
+    }
+    .info {
+        display: none !important;
+    }
+    controls {
+        position: fixed;
+        bottom: 0%;
+        left: 0%;
+        right: 0%;
+        height: 3.5em;
+        padding-top: 5px;
+        z-index: 200;
+        background-color: black;
+    }
+    controls>div {
+        display: flex;
+        width: 100%;
+        align-items: center;
+    }
+    controls>div>div {
+        display: flex;
+        width: calc(100% / 3);
+        align-items: center;
+    }
+    controls img {
+        height: 3.5em;
+    }
+    controls img+div {
+        width: calc(100% - 3.5em - 1%);
+        padding-left: 1%;
+    }
+    controls img+div>* {
+        display: block;
+        width: 100%;
+        font-family: circula !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: pre;
+    }
+    controls div+div>div {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+    controls div+div:not(div+div+div)>div>span {
+        width: calc(50% / 5);
+        display: inline-block;
+        text-align: center;
+        font-size: xx-large !important;
+    }
+    controls div+div+div>div {
+        text-align: right;
+    }
+    controls div+div+div span {
+        font-size: xx-large !important;
+    }
+    controls [class]:hover {
+        background-clip: text;
+        -webkit-background-clip: text;
+        background-image: var(--audhub-gradient);
+        appearance: none;
+        -webkit-text-fill-color: transparent;
+    }
+    controls progress, controls>input {
+        position: absolute;
+        top: 0%;
+        border-radius: 0;
+        height: 5px;
+        border: none;
+        outline: none;
+        z-index: 1;
+        width: 100%;
+    }
+    controls>input {
+        z-index: 2;
+        transform: translateY(-2px);
+        opacity: 0;
+    }
+    controls progress {
+        appearance: none;
+        background-color: #222;
+    }
+    controls progress::-webkit-progress-value {
+        appearance: none;
+        background-image: var(--audhub-gradient);
+    }
+    controls progress::-moz-progress-bar {
+        appearance: none;
+        background-image: var(--audhub-gradient);
+    }
+    controls progress:not(controls>progress) {
+        position: static;
+        width: 30%;
+        transform: translateY(-300%);
+    }
+    controls input:not(controls>input){
+        position: absolute;
+        width: 10%;
+        right: 2.25%;
+        top: 32%;
+        opacity: 0;
+        z-index: 1;
+    }
+    div.charts {
+        white-space: normal;
+        overflow-x: hidden;
+        padding: 1%;
+    }
+    div.charts div {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        padding: 1%;
+        border-radius: 15px;
+        height: 2.5em;
+        overflow: hidden;
+        margin-bottom: 1%;
+    }
+    div.charts img {
+        height: 2.5em;
+        width: 2.5em;
+        object-fit: cover;
+        margin: 0 !important;
+        border-radius: 15px;
+        margin-right: 3%;
+    }
+    div.charts span:not([class]){
+        width: calc((100% / 3) - (3% + 3em));
+    }
+    div.charts [class]{
+        float: right;
+        width: initial;
+    }
+    div.charts [class]{
+        font-size: x-large !important;
+    }
+    div.charts [class]:hover {
+        background-clip: text;
+        -webkit-background-clip: text;
+        background-image: var(--audhub-gradient);
+        appearance: none;
+        -webkit-text-fill-color: transparent;
+    }
+    *.normal>div:nth-of-type(7), *.normal>div:nth-of-type(13), *.normal>div:nth-of-type(19), *.normal>div:nth-of-type(27), *.normal>div:nth-of-type(33), *.normal>div:nth-of-type(39), *.normal>div:nth-of-type(47), *.normal>div:nth-of-type(53), *.normal>div:nth-of-type(59){
+        margin-left: 0 !important;
+        margin-top: 1%;
+    }
+}

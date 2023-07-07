@@ -1,0 +1,74 @@
+th::after {
+    content: ": ";
+    white-space: pre;
+}
+table,tbody,tr {
+    display: block;
+    width: 100%
+}
+tr {
+    margin-bottom: 2%;
+}
+@media only screen and (orientation: portrait){
+    th, td {
+        width: 45%;
+        margin: auto;
+        display: inline-block;
+        text-align: left;
+    }
+}
+@media only screen and (orientation: landscape){
+    th, td {
+        width: 25%;
+        margin: auto;
+        display: inline-block;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    th {
+        width: 19% !important;
+    }
+    td {
+        width: 25%;
+    }
+}
+
+.zoom-in {
+    animation: zoom-in 1s ease-in-out forwards;
+}
+@keyframes zoom-in {
+    0% { transform: scale(0.3); }
+    100% { transform: scale(1); }
+}
+.zoom-out {
+    animation: zoom-out 1s ease-in-out forwards;
+}
+@keyframes zoom-out {
+    0% { transform: scale(1); }
+    100% { transform: scale(0.8); }
+}
+.active {
+    background-color: #fff !important;
+}
+td[colspan]   {
+    display: inline-block;
+    width: 49% !important;
+    margin: auto;
+}
+td[colspan="4"]{
+    width: 100% !important;
+}
+td[colspan]>button {
+    width: 100%;
+	margin: auto;
+	padding: 1%;
+	border-radius: 5px;
+	border: none;
+    font-weight: bold;
+    font-family: circula;
+    color: white;
+	outline: none;
+	font-size: medium;
+	background-image: linear-gradient(to bottom, #5152ff, #0077ff);
+}

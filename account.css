@@ -1,0 +1,191 @@
+html::before {
+    background-color: black;
+    z-index: -2;
+    opacity: 0.3;
+}
+html::after {
+    background-image: url('pexels-pixabay-247676.jpg');
+    z-index: -3;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+html::before, html::after {
+    position: fixed;
+    top: 0%;
+    bottom: 0%;
+    left: 0%;
+    right: 0%;
+    content: "";
+    display: block;
+}
+html {
+    background-color: black;
+}
+* {
+    color: white;
+    font-family: ui;
+}
+@font-face {
+    font-family: ui;
+    src: url(/css/segoeui.ttf);
+}
+header {
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    padding: 1%;
+    padding-left: 2%;
+    padding-right: 2%;
+    right: 0%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+header img {
+    height: 3em;
+}
+header>div {
+    display: flex;
+    align-items: center;
+}
+div.left {
+    justify-self: left;
+    float: left;
+}
+div.right {
+    justify-self: right;
+    float: right;
+}
+header div.left span {
+    font-weight: bold;
+    font-size: larger;
+}
+a {
+    text-decoration: none;
+    padding-left: 5px;
+}
+a:hover {
+    text-decoration: underline;
+}
+footer {
+    padding: 1%;
+    padding-left: 2%;
+    padding-right: 2%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+form {
+    width: 80%;
+    margin: auto;
+    margin-top: 3%;
+    text-align: center;
+}
+form img {
+    height: 20vh;
+}
+label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30%;
+    margin: auto;
+    outline-offset: 0;
+    height: 2em;
+    margin-bottom: 3%;
+}
+label::before {
+    position: absolute;
+    padding: 5px;
+    z-index: -2;
+    content: "";
+    opacity: 0.1;
+    transform: translateY(-1%);
+    background-color: white;
+    width: 23%;
+    padding-right: 0px;
+    padding-left: 0px;
+    border-radius: 5px;
+    height: inherit;
+    display: block;
+}
+input {
+    width: 80%;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-size: medium;
+}
+label>span {
+    margin-right: 1%;
+}
+button {
+    width: 28%;
+    margin: auto;
+    padding: 1%;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    font-size: medium;
+    background-image: linear-gradient(to bottom, #5152ff, #0077ff);
+}
+@media only screen and (orientation: portrait){
+    header div.right {
+        display: none;
+    }
+    label {
+        width: 80%;
+        margin-bottom: 10%;
+    }
+    label::before {
+        width: 65%;
+    }
+    footer div.right {
+        display: none;
+    }
+    footer div.left {
+        float:none;
+    }
+    footer {
+        justify-content: center;
+        margin-top: 5vh;
+        position: static;
+    }
+    form {
+        margin-top: 10vh;
+    }
+    button {
+        width: 84%;
+        padding: 2.5%;
+    }
+}
+code {
+    display: block;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 1%;
+}
+input[type=checkbox]{
+    appearance: none;
+    width: 2em;
+    border: 0;
+    border-radius: 10px;
+    transform: translateY(5px);
+    height: 1em;
+    background-color: white;
+}
+input[type=checkbox]::before {
+    background-color: blue;
+    content: " ";
+    float: left;
+    width: 50%;
+    border-radius: 10px;
+    color: blue;
+    height: 90%;
+    background-image: linear-gradient(to bottom, #5152ff, #0077ff);
+    margin-top: 2%;
+}
+input[type=checkbox]:checked::before {
+    float: right;
+}

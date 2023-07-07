@@ -1,0 +1,402 @@
+html {
+    background-color: #111;
+    overflow-x: hidden;
+    color: white;
+    --audhub-gradient: linear-gradient(to bottom, blue, cyan);
+    --old-gradient: linear-gradient(to bottom, #5152ff, #0077ff);
+    overflow-y: scroll;
+}
+@font-face {
+    font-family: circula;
+    src: url(/css/CircularStd-Book.ttf);
+    font-weight: normal;
+}
+@font-face {
+    font-family: ui;
+    src: url(/css/segoeui.ttf);
+}
+* {
+    font-family: ui;
+}
+p.category {
+    font-family: circula;
+}
+i {
+    font-style: normal;
+}
+.visible {
+    display: block !important;
+}
+display>div:not(*+div):not(div.upload)>p {
+    font-family: circula !important;
+    font: bold 7vh white;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 3px 3px 5px black;
+}
+p.category {
+    font-weight: bold;
+    font-size: larger;
+}
+
+div.list {
+    white-space: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+div.list::-webkit-scrollbar {
+    width: 0px;
+}
+div.list>div {
+    display: inline-block;
+    margin-right: 10px;
+    width: 10em;
+    overflow-x: hidden;
+}
+div.list>div+div:not(div.charts>div) {
+    margin-left: 10px;
+}
+div.list img {
+    width: 75%;
+    margin-top: 2.5% !important;
+    margin-bottom: 2.5% !important;
+}
+div.list>div>* {
+    display: block;
+    margin: auto;
+}
+div.artist img {
+    border-radius: 50%;
+}
+div.artist span {
+    text-align: center;
+}
+div.list:not(div.charts) span+span{
+    font-size: small;
+    font-family: ui;
+}
+div.list:not(div.artist) img {
+    border-radius: 5px;
+}
+div.new img {
+    height: initial;
+}
+div.list div {
+    background-color: #0c0c0c;
+    border-radius: 5px;
+    padding: 1%;
+    width: calc(10em - 2%);
+}
+a {
+    text-align: center;
+    color: white;
+    font-size: large;
+    font-weight: bold;
+    text-decoration: none;
+}
+navbar a:not(a[href])>span{
+    color: white;
+    opacity: 1 !important;
+}
+navbar>div+div {
+    padding-bottom: 30%;
+}
+navbar {
+    display: block;
+    background-color: black;
+    position: fixed;
+    left: 0%;
+    width: 13%;
+    height: 100%;
+    top: 0;
+    padding-right: 1%;
+    padding-left: 1%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    bottom: 0;
+}
+navbar::-webkit-scrollbar {
+    width: 0px;
+}
+
+navbar>div:not(div+div)>span {
+    font-size: 5em !important;
+    width: 100%;
+    text-align: center;
+}
+navbar>div:not(div+div)>img {
+    height: 5em;
+    border-radius: 50%;
+    display: block;
+    margin: auto;
+}
+navbar a{
+    text-decoration: none;
+    color: white;
+}
+navbar>div:not(div+div)>a {
+    display: block;
+    text-align: center;
+    font-weight: bold;
+    font-size: larger;
+}
+navbar>div+div {
+    display: block;
+    margin-top: 10%;
+}
+navbar>div+div span {
+    display: flex;
+    width: 100%;
+    margin-bottom: 10%;
+    font-size: medium;
+    align-items: center;
+    opacity: 0.55;
+}
+navbar i {
+    font-size: large !important;
+    margin-right: 5%;
+}
+navbar>div:not(div+div) {
+    padding-top: 4em;
+}
+navbar a {
+    display: contents;
+}
+div>p.error {
+    text-align: center !important;
+    font-weight: bold;
+    color:red !important;
+    width: 100% !important;
+    font-size: large !important;
+    letter-spacing: 0.25em;
+}
+p.error:hover {
+    -webkit-text-fill-color: red !important;
+    appearance:initial !important;
+}
+div#cover>div.cover {
+    display: block;
+    position: fixed;
+    z-index: 500;
+    background-color: black;
+    opacity: 0.7;
+    left: 0%;
+    right: 0%;
+    top: 0%;
+    bottom: 0%;
+}
+div#cover a {
+    display: block;
+    padding: 1%;
+}
+div#cover>div.body {
+    display: block;
+    position: fixed;
+    z-index: 501;
+    background-color: #222;
+    top: calc((100% - 40%) / 2);
+    height: 40%;
+    left: calc((100% - 30%) / 2);
+    width: 30%;
+    line-height: 2.5em;   
+    border-radius: 15px;
+    text-align: center;
+    font-size: larger;
+}
+div#cover span {
+    color: goldenrod;
+    display: block;
+    padding: 1%;
+    font-size: xx-large;
+    font-weight: bold;
+}
+div#cover button {
+	width: 50%;
+	font-size: medium;
+	font-family: ui;
+	padding: 5px;
+    outline: none;
+	border-style: none;
+	text-align: center;
+	color: white;
+	border-radius: 5px;
+    background: linear-gradient(to bottom, #5152ff, #0077ff);
+}
+span>tt {
+    font-family: inherit;
+    font-size: inherit;
+}
+@media only screen and (orientation: portrait){
+    div#cover>div.body{
+        width: 85%;
+        height: 45%;
+        top: calc((100% - 45%) / 2);
+        left: calc((100% - 85%) / 2);
+    }
+    display>div:not(*+div):not(div.upload)>p {
+        font-size: x-large;
+    }
+}
+display>nav:not(*+nav) {
+	height: 30vh;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+    background-position: center;
+	background-position-y: 25%;
+    background-size: cover;
+    background-color: #0d0d0d;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+	margin-bottom: 13vh;
+    background-repeat: no-repeat;
+}
+display>nav>img {
+    transform: translate(0%, 50%);
+    height: 100%;
+    border-radius: 50%;
+    height: 80%;
+    outline: solid white 5px;
+    outline-offset: 5px;
+}
+@media only screen and (orientation: portrait){
+    display>nav:not(*+nav) {
+        height: 25vh;
+        margin-bottom: 30%;
+        background-position: center !important;
+    }
+}
+.dot {
+    width: 5px;
+    height: 5px;
+    margin: 0 5px;
+    background-color: #222;
+    cursor: pointer;
+}
+p.category span{
+    font-size: small !important;
+}
+p.category>a {
+    font-family: circula !important;
+}
+.list i {
+    font-size: small !important;
+}
+span.symbol.medium-font {
+    font-size: larger !important;
+    float: right !important;
+}
+display>div:not(*+div){
+    height: 150px;
+    width: 100%;
+    background-position: center center;
+}
+*.normal {
+    white-space: normal !important;
+}
+section>button {
+	width: 100%;
+	margin: auto;
+	padding: 1%;
+	border-radius: 5px;
+	border: none;
+	font-weight: bold;
+	font-family: circula;
+	color: white;
+	outline: none;
+	font-size: medium;
+	background-image: var(--old-gradient);
+}
+#progress {
+    position: fixed;
+    height: 5px;
+    display: none;
+    width: 100%;
+    z-index: 300;
+    appearance: none;
+    background-color: #222;
+	top: 0%;
+	border-radius: 0;
+	border: none;
+	outline: none;
+}
+#progress::-webkit-progress-value {
+    appearance: none;
+    background-image: var(--old-gradient);
+}
+#progress::-moz-progress-bar {
+    appearance: none;
+    background-image: var(--old-gradient);
+}
+.color {
+    background-clip: text;
+    -webkit-background-clip: text;
+    background-image: var(--audhub-gradient);
+    -webkit-text-fill-color: transparent;
+}
+div.charts>div {
+    width: initial !important;
+    margin-right: initial !important;
+}
+a.underline {
+    text-decoration: underline !important;
+    font-weight: initial !important;
+    font-size: initial !important;
+}
+info {
+    position: relative;
+    z-index: 400;
+}
+info input[type=checkbox]{
+    appearance: none;
+    width: 2em;
+    float: right;
+    border: 0;
+    border-radius: 10px;
+    transform: translateY(5px);
+    height: 1em;
+    background-color: white;
+}
+info input[type=checkbox]::before {
+    background-color: blue;
+    content: " ";
+    float: left;
+    width: 50%;
+    border-radius: 10px;
+    color: blue;
+    height: 90%;
+    background-image: var(--old-gradient);
+    margin-top: 2%;
+}
+info input[type=checkbox]:checked::before {
+    float: right;
+}
+.symbol.nav {
+    transform: rotate(90deg);
+    font-weight: bold !important;
+    text-shadow: 3px 3px 5px black;
+}
+.symbol.nav:hover {
+    background-clip: initial !important;
+    -webkit-background-clip: initial !important;
+    background-image: initial !important;
+    -webkit-text-fill-color: initial !important;
+}
+[data-old-grad] {
+    background-image: var(--old-gradient) !important;
+}
+[data-old-grad]:hover {
+    background-image: linear-gradient(red, red) !important;
+}
+div.charts [class][data-symbol=true] {
+    font-family: circula !important;
+    font-size: large !important;
+}

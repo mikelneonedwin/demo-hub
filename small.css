@@ -1,0 +1,229 @@
+@media only screen and (orientation: portrait){
+    panel {
+        left: 0%;
+        right: 0%;
+        position: fixed;
+        top: 0%;
+        height: auto;
+        display: flex;
+        z-index: 100;
+        align-items: center;
+        background-color: black;
+    }
+    panel>div {
+        display: flex;
+        padding: 2%;
+        align-items: center;
+        width: 100%;
+    }
+    panel input {
+        width: calc(100% - 32px);
+        margin: auto;
+        background-color: #111;
+        border: none;
+        outline: none;
+        color: white;
+        font-size: large !important;
+        text-align: center;
+    }
+    panel>div>span {
+        height: 100%;
+        font-size: xx-large !important;
+        border-radius: 5px;
+        margin: auto;
+        border: none;
+        outline: none;
+        background-clip: text;
+        -webkit-background-clip: text;
+        background-image: var(--audhub-gradient);
+        font-weight: bold;
+        appearance: none;
+        -webkit-text-fill-color: transparent;
+    }
+    display {
+        display: block;
+        padding-right: 1%;
+        padding-left: 1%;
+        padding-top: 10%;
+        padding-bottom: 25%;
+    }
+    div.charts {
+        white-space: normal;
+    }
+    div.charts>div {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 3%; 
+    }
+    div.charts img {
+        height: 2.5em;
+        width: 2.5em;
+        object-fit: cover;
+        margin: 0 !important;
+        border-radius: 15px;
+        margin-right: 3%;
+    }
+    div.charts>div {
+        display: flex;
+        align-items: center;
+    }
+    div.charts>div>div>span {
+        display: block;
+        white-space: nowrap;
+        font-family: ui !important;
+        font-size: medium !important;
+    }
+    div.charts>div>div {
+        width: calc(100% - (3% + 8em));
+        margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-left: 1%;
+    }
+    div.charts>div>div+div {
+        width: 100%;
+        display: flex;
+        align-items: center;
+    }
+    div.charts i {
+        display: inline-block;
+        margin-left: 2% !important;
+        margin: 0;
+        width: 1.5em !important;
+        font-size: small !important;
+        text-align: center;
+    }
+    div.charts>div>span {
+        float: right;
+        position: absolute;
+        right: 4%;
+        margin: inherit;
+    }
+    div.charts>div>span.symbol {
+        right: calc(4% + 1.5em);
+    }
+    div.new span+span {
+        font-family: ui;
+        font-size: small;
+    }
+    display>div:not(p+div) {
+        margin-top: 3%;
+    }
+    controls {
+        position: fixed;
+        bottom: 0%;
+        left: 0%;
+        padding-top: 1%;
+        right: 0%;
+        align-items: center;
+        background-color: black;
+        z-index: 200;
+    }
+    controls>div {
+        display: flex;  
+        width: 100%;
+        align-items: center;
+    }
+    controls img {
+        height: 3em;
+    }
+    controls progress, controls>input {
+        position: absolute;
+        top: 0%;
+        border-radius: 0;
+        height: 5px;
+        border: none;
+        outline: none;
+        z-index: 1;
+        width: 100%;
+    }
+    controls>div>div>span {
+        display: block !important;
+        width: 100%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    controls>div>div {
+        width: calc(100% - 7em);
+        margin-left: 1%;
+    }
+    controls [class] {
+        background-clip: text;
+        -webkit-background-clip: text;
+        background-image: var(--audhub-gradient);
+        appearance: none;
+        -webkit-text-fill-color: transparent;
+        font-size: xx-large !important;
+    }
+    
+    controls>input {
+        z-index: 2;
+        transform: translateY(-2px);
+        opacity: 0;
+    }
+    controls progress {
+        appearance: none;
+        background-color: #222;
+    }
+    controls progress::-webkit-progress-value {
+        appearance: none;
+        background-image: var(--audhub-gradient);
+    }
+    controls progress::-moz-progress-bar {
+        appearance: none;
+        background-image: var(--audhub-gradient);
+    }
+    controls>nav {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        border-top: 1px solid white;
+        padding-bottom: 1%;
+    }
+    controls nav a {
+        font-size: medium;
+        padding-bottom: 1%;
+        padding-top: 1%;
+        width: calc(100% / 3);
+        background-clip: text;
+        -webkit-background-clip: text;
+        background-image: var(--audhub-gradient);
+        appearance: none;
+        -webkit-text-fill-color: transparent;
+    }
+    navbar {
+        display: none;
+        z-index: 300;
+        width: 50%;
+    }
+    navbar::after {
+        content: "";
+        background-color: #000;
+        opacity: 0.5;
+        position: fixed;
+        top: 0%;
+        bottom: 0%;
+        right: 0%;
+        width: 50%;
+    }
+    controls div>span+span {
+        opacity: 0.7;
+    }
+    controls div>span {
+        font-family: circula !important;
+    }
+    *.normal>div {
+        width: 44% !important;
+        margin-right: 2% !important;
+        margin-left: 2% !important;
+        margin-bottom: 2%;
+    }
+    display>nav:not(*+nav) {
+        margin-bottom: 10vh;
+    }
+    display>div.new>div>span {
+        padding-left: 5px;
+    }
+}
