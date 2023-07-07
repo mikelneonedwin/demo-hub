@@ -33,7 +33,7 @@ function IR(){
                     error(imageRef.current.parentElement, "Please select 1x1 Image \n must be a perfect square");
                     return false;
                 }
-                const info = {name: artistRef.current.value.comma(), genre: genRef.current.value, img: imageFile.current.files[0]};
+                const info = {name: artistRef.current.value, genre: genRef.current.value, img: imageFile.current.files[0]};
                 const resp = await rtdb.caid(info);
                 if(resp.error.length > 0){
                     error(imageRef.current.parentElement, resp.error[0]);
