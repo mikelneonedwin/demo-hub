@@ -30,6 +30,56 @@
         <style>footer {position: fixed; bottom: 1%; right: 0%; left: 0%}@media only screen and (orientation: landscape){form {margin-top: 5%}}</style>
         <script type="module" src="/js/idb.js"></script>
         <script src="/js/login.js"></script>
+        <style>
+            div#cover>div.cover {
+                display: block;
+                position: fixed;
+                z-index: 500;
+                background-color: black;
+                opacity: 0.7;
+                left: 0%;
+                right: 0%;
+                top: 0%;
+                bottom: 0%;
+            }
+            div#cover a {
+                display: block;
+                padding: 1%;
+            }
+            div#cover>div.body {
+                display: block;
+                position: fixed;
+                z-index: 501;
+                background-color: #222;
+                top: calc((100% - 40%) / 2);
+                height: 40%;
+                left: calc((100% - 30%) / 2);
+                width: 30%;
+                line-height: 2.5em;   
+                border-radius: 15px;
+                text-align: center;
+                font-size: larger;
+            }
+            div#cover span {
+                color: goldenrod;
+                display: block;
+                padding: 1%;
+                font-size: xx-large;
+                font-weight: bold;
+            }
+            div#cover button {
+                width: 50%;
+                font-size: medium;
+                font-family: ui;
+                padding: 5px;
+                outline: none;
+                border-style: none;
+                text-align: center;
+                color: white;
+                border-radius: 5px;
+                background: linear-gradient(to bottom, #5152ff, #0077ff);
+            }
+        </style>
     </head>
     <body>
         <header>
