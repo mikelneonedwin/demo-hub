@@ -469,7 +469,7 @@ Q.rtdb = {
         }
         GID = info.gid;
         SID = generateId();
-        const present = exs.length ? exs : Object.keys((await get(ref(db, '/'))).val());
+        const present = exs.length ? exs : Object.keys((await get(ref(db, '/sid/'))).val());
         while(present.includes(SID)){
             SID = generateId()
             exs.push(SID);
