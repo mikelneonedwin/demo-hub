@@ -909,7 +909,7 @@ function PRG(){
         start(){
             this.info = document.querySelector("info") || document.body.appendChild(document.createElement("info"));
             this.info.innerHTML = '';
-            this.info.appendChild(this.Cover(val, txt));
+            this.info.appendChild(this.Cover());
         },
         progress(val, txt){
             this.info.innerHTML = '';
