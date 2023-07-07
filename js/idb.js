@@ -396,8 +396,10 @@ Q.rtdb = {
     },
     reload: async () => {await database("update"); return true},
     add: async function (info) {
+        const state = PRG();
+        state.start();
+        state.progress(30, 'Processing...');
         const img = () => `data:image/svg+xml;base64,${btoa(`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="#222"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-size="48" font-family="Arial" fill="#fff">${info.name.charAt(0).toUpperCase()}</text></svg>`)}`
-        //check database for similar data
         let resp = {error: [], id: '', success: undefined};
         let f = Object.values((await get(ref(db, 'uid'))).val());
         f.forEach(b => {
@@ -417,14 +419,17 @@ Q.rtdb = {
                 resp.error.push("Email has already been used");
             }
         })
+        state.progress(60, 'Processing');
         if(resp.error.length == 0){
             f = f.map(a => a.uid);
             let a = generateId();
             while(f.includes(a)) {a = generateId()}
             info.img = img();
             info.uid = a;
+            state.progress(90, 'Processing...');
             await set(ref(db, `uid/${a}`), info).then(() => {resp.success = true; resp.id = a}).catch(() => {resp.error.push("Couldn't create account")});
         }
+        state.close;
         ms.clear();
         return resp;
     },
