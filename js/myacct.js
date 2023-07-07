@@ -139,7 +139,8 @@ function IR(){
             (() => {
                 //collabs
                 const [e, se] = useState(false);
-                if(!id.aid || E || !id.aid.ad('sid')) return undefined;
+                if(!id.aid) return undefined;
+                if(E || !id.aid.ad('sid')) return undefined;
                 const data = id.aid.ad('sid').map(a => a.sd()).filter(a => a.owner != id.aid);
                 if(!data.length) return undefined;
                 return [
@@ -150,7 +151,8 @@ function IR(){
             (() => {
                 //albums
                 const [e, se] = useState(false);
-                if(!id.aid || E  || !id.aid.ad('alid')) return undefined;
+                if(!id.aid) return undefined;
+                if(E || !id.aid.ad('alid')) return undefined;
                 const data = id.aid.ad('alid').map(a => a.ed()).filter(a => a.owner == id.aid);
                 if(!data.length) return undefined;
                 data.sort((a,b) => b.age - a.age);
@@ -177,7 +179,8 @@ function IR(){
             (() => {
                 //uploaded for you
                 const [e, se] = useState(false);
-                if(!id.aid || E || !id.aid.ad('alid')) return undefined;
+                if(!id.aid) return undefined;
+                if(E || !id.aid.ad('alid')) return undefined;
                 const data = id.aid.ad('alid').map(a => a.ed()).filter(a => a.owner != id.aid);
                 if(!data.length) return undefined;
                 data.sort((a,b) => b.age - a.age);
