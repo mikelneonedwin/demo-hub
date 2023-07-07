@@ -853,8 +853,6 @@ function LAS({data, chart = true, limit = 200, level, list, mode}){
     })
 }
 function MAI({level, data, limit = Infinity, h}){
-    console.log(data, level);
-    if(1) return;
     if(typeof data[0] != "object"){
         if(typeof data[0] == "undefined"){
             data = Object.values(data);
@@ -871,6 +869,7 @@ function MAI({level, data, limit = Infinity, h}){
             }
         }
     }
+    if(level == "g") data = data.filter(a => a.sid);
     if(level == "ar"){
         return data.slice(0,limit).map((a,b) => 
                 <div key={b} onClick={() => AJAX(`/listen/artist?id=${a.aid}`)}>
