@@ -3,8 +3,8 @@ function IR(){
         const m = [
             [<th>Phone</th>,<td><a href="tel:2348076488738" className="underline">+234 807 6488 738</a></td>],
             [<th>Email</th>,<td><a href="mailto:mynameiswinneredwin@gmail.com" className="underline">mynameiswinneredwin@gmail.com</a></td>],
-            [<th>Facebook</th>,<td><a style={{color: "blue"}} target="_blank" href="https://fb.me/mikelneonedwin">@mikelneonedwin</a></td>],
-            [<th>WhatsApp</th>,<td><a style={{color: "lime"}} target="_blank" href="https://wa.me/2348076488738">2348076488738</a></td>],
+            [<th>Facebook</th>,<td><a style={{color: "#0077ff"}} className="underline" target="_blank" href="https://fb.me/mikelneonedwin">@mikelneonedwin</a></td>],
+            [<th>WhatsApp</th>,<td><a style={{color: "green"}} className="underline" target="_blank" href="https://wa.me/2348076488738">2348076488738</a></td>],
             [<th>All Time Streams</th>, <td>{Object.values(ms.get('sid')).reduce((a,b) => a+(b.streams+2*b.downloads),0).val()}</td>],
             [<th>Streams from last 7days</th>, <td>{Object.values(ms.get('sid')).reduce((a,b) => a+b.recent,0).val()}</td>],
             [<th>Artists</th>,<td>{Object.values(ms.get('aid')).length.val()}</td>],
