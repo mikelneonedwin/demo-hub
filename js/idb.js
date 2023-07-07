@@ -522,18 +522,22 @@ Q.rtdb = {
     },
     log: async function (info){
         let resp = {error: []};
+        const state = PRG();
+        state.start();
+        state.progress(30, 'Processing...');
         let f = Object.values((await get(ref(db, 'uid'))).val());
         for(const a of f){
-            console.log(a);
-            if(a.username == info.key || info.contact == info.key && a.pwd == info.pwd){
+            if((a.username == info.key || info.contact == info.key) && a.pwd == info.pwd){
                 resp.id = a.uid;
                 resp.success = true;
                 resp.username = a.username;
             }
         }
+        state.progress(60, 'Processing');
         if(!resp.success){
             resp.error.push("Wrong login or password");
         }
+        state.close();
         return resp;
     },
     calid: async function(info){
