@@ -128,7 +128,7 @@ function IR(){
             (() => {
                 //songs
                 const [e, se] = useState(false);
-                if(!id.aid || E) return undefined;
+                if(!id.aid || E || !id.aid.ad('sid')) return undefined;
                 const data = id.aid.ad('sid').map(a => a.sd()).filter(a => a.owner == id.aid);
                 if(!data.length) return undefined;
                 return [
@@ -139,7 +139,7 @@ function IR(){
             (() => {
                 //collabs
                 const [e, se] = useState(false);
-                if(!id.aid || E) return undefined;
+                if(!id.aid || E || !id.aid.ad('sid')) return undefined;
                 const data = id.aid.ad('sid').map(a => a.sd()).filter(a => a.owner != id.aid);
                 if(!data.length) return undefined;
                 return [
@@ -150,7 +150,7 @@ function IR(){
             (() => {
                 //albums
                 const [e, se] = useState(false);
-                if(!id.aid || E) return undefined;
+                if(!id.aid || E  || !id.aid.ad('alid')) return undefined;
                 const data = id.aid.ad('alid').map(a => a.ed()).filter(a => a.owner == id.aid);
                 if(!data.length) return undefined;
                 data.sort((a,b) => b.age - a.age);
@@ -163,7 +163,7 @@ function IR(){
                 //Most streamed albums
                 const [e, se] = useState(false);
                 let data = likes;
-                if(!(data && data.alid) || E) return false;
+                if(!(data && data.alid) || E || !id.aid.ad('alid')) return false;
                 data = Object.entries(data.alid).sort((a,b) => b[1] - a[1]);
                 if(!data.length) return undefined;
                 return [
@@ -177,7 +177,7 @@ function IR(){
             (() => {
                 //uploaded for you
                 const [e, se] = useState(false);
-                if(!id.aid || E) return undefined;
+                if(!id.aid || E || !id.aid.ad('alid')) return undefined;
                 const data = id.aid.ad('alid').map(a => a.ed()).filter(a => a.owner != id.aid);
                 if(!data.length) return undefined;
                 data.sort((a,b) => b.age - a.age);
