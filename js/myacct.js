@@ -30,7 +30,7 @@ function IR(){
             [<th>Contact</th>, <td>{id.contact}</td>],
             [<th>Profile ID</th>, <td>{id.uid}</td>],
             [<th>Account Status</th>, <td>{id.pro ? "Contributor Account" : id.aid ? "Artist Account" : "User Account"}</td>],
-            [<td colSpan="2" onClick={() => se(!E)}><button>Edit</button></td>, <td colSpan="2" onClick={() => {
+            [<td colSpan="2" onClick={() => se(true)}><button>Edit</button></td>, <td colSpan="2" onClick={() => {
                 if(id.aid) AJAX('/listen/artist?id=' + id.aid);
                 else AJAX('/myaccount/artist/claim');
             }}><button>{id.aid ? ms.query("aid.name", "id.aid") : "Upgrade Account"}</button></td>]
@@ -110,86 +110,93 @@ function IR(){
         return [
             <nav style={{backgroundImage: `url('/6956144-cool-hd-music-wallpapers.jpg')`}}><img ref={img} src={id.img}/></nav>,
             <div>{MA}</div>,
-            (() => {
-                //most listened songs
-                let data = likes;
-                if(!(data && data.sid) || E) return undefined;
-                data = Object.entries(data.sid).sort((a,b) => b[1] - a[1]);
-                if(!data.length) return undefined;
-                const [e, se] = useState(false);
-                return [
-                    <p className="category" onClick={() => data.length > 5 ? se(!e) : undefined}>Most Listened Songs {data.length > 5 ? <span className="symbol">{e ? "step_out" : "step_into"}</span> : undefined}</p>,
-                    <div className="list charts"><LAS data={data.map(a => a[0])} level="s" limit={e ? Infinity : 5} chart={false} list={true} mode={(info) => {
-                        info = info.sid;
-                        return Number(data[data.map(a => a[0]).indexOf(String(info))][1]).val() + "P";
-                    }}/></div>
-                ]
-            })(),
-            (() => {
-                //songs
-                const [e, se] = useState(false);
-                if(!id.aid || E || !id.aid.ad('sid')) return undefined;
-                const data = id.aid.ad('sid').map(a => a.sd()).filter(a => a.owner == id.aid);
-                if(!data.length) return undefined;
-                return [
-                    <p className="category" onClick={() => data.length > 5 ? se(!e) : undefined}>Your Songs {data.length > 5 ? <span className="symbol">{e ? "step_out" : "step_into"}</span> : undefined}</p>,
-                    <div className="list charts"><LAS data={data} level="s" limit={e ? Infinity : 5}/></div>
-                ]
-            })(),
-            (() => {
-                //collabs
-                const [e, se] = useState(false);
-                if(!id.aid) return undefined;
-                if(E || !id.aid.ad('sid')) return undefined;
-                const data = id.aid.ad('sid').map(a => a.sd()).filter(a => a.owner != id.aid);
-                if(!data.length) return undefined;
-                return [
-                    <p className="category" onClick={() => data.length > 5 ? se(!e) : undefined}>Collaborations {data.length > 5 ? <span className="symbol">{e ? "step_out" : "step_into"}</span> : undefined}</p>,
-                    <div className="list charts"><LAS data={data} level="s" limit={e ? Infinity : 5}/></div>
-                ]
-            })(),
-            (() => {
-                //albums
-                const [e, se] = useState(false);
-                if(!id.aid) return undefined;
-                if(E || !id.aid.ad('alid')) return undefined;
-                const data = id.aid.ad('alid').map(a => a.ed()).filter(a => a.owner == id.aid);
-                if(!data.length) return undefined;
-                data.sort((a,b) => b.age - a.age);
-                return [
-                    <p className="category" onClick={() => data.length > 5 ? se(!e) : undefined}>Your Albums {data.length > 5 ? <span className="symbol">{e ? "step_out" : "step_into"}</span> : undefined}</p>,
-                    <div className="list new artists"><MAI data={data} level="al" limit={e ? Infinity : 5}/></div>
-                ]
-            })(),
-            (() => {
-                //Most streamed albums
-                const [e, se] = useState(false);
-                let data = likes;
-                if(!(data && data.alid) || E || !id.aid.ad('alid')) return false;
-                data = Object.entries(data.alid).sort((a,b) => b[1] - a[1]);
-                if(!data.length) return undefined;
-                return [
-                    <p className="category" onClick={() => data.length > 5 ? se(!e) : undefined}>Most Listened Albums {data.length > 5 ? <span className="symbol">{e ? "step_out" : "step_into"}</span> : undefined}</p>,
-                    <div className="list charts"><LAS data={data.map(a => a[0])} level="al" limit={e ? Infinity : 5} chart={false} list={true} mode={(info) => {
-                        info = info.alid;
-                        return Number(data[data.map(a => a[0]).indexOf(String(info))][1]).val() + "P";
-                    }}/></div>
-                ]
-            })(),
-            (() => {
-                //uploaded for you
-                const [e, se] = useState(false);
-                if(!id.aid) return undefined;
-                if(E || !id.aid.ad('alid')) return undefined;
-                const data = id.aid.ad('alid').map(a => a.ed()).filter(a => a.owner != id.aid);
-                if(!data.length) return undefined;
-                data.sort((a,b) => b.age - a.age);
-                return [
-                    <p className="category" onClick={() => data.length > 5 ? se(!e) : undefined}>Your Albums (Co-Owned) {data.length > 5 ? <span className="symbol">{e ? "step_out" : "step_into"}</span> : undefined}</p>,
-                    <div className="list charts"><MAI data={data} level="al" limit={e ? Infinity : 5}/></div>
-                ]
-            })(),
-            id.aid ? <button onClick={() => AJAX('/myaccount/stats/')}>Profile Stats</button> : undefined
+            !E ? [
+                likes ? [
+                    (() => {
+                        //most listened songs
+                        let data = likes;
+                        if(!(data && data.sid)) return undefined;
+                        data = Object.entries(data.sid).sort((a,b) => b[1] - a[1]);
+                        if(!data.length) return undefined;
+                        const [e, se] = useState(false);
+                        return [
+                            <p className="category" onClick={() => data.length > 5 ? se(!e) : undefined}>Most Listened Songs {data.length > 5 ? <span className="symbol">{e ? "step_out" : "step_into"}</span> : undefined}</p>,
+                            <div className="list charts"><LAS data={data.map(a => a[0])} level="s" limit={e ? Infinity : 5} chart={false} list={true} mode={(info) => {
+                                info = info.sid;
+                                return Number(data[data.map(a => a[0]).indexOf(String(info))][1]).val() + "P";
+                            }}/></div>
+                        ]
+                    })(),
+                    (() => {
+                        //Most streamed albums
+                        const [e, se] = useState(false);
+                        let data = likes;
+                        if(!data.alid) return undefined;
+                        data = Object.entries(data.alid).sort((a,b) => b[1] - a[1]);
+                        if(!data.length) return undefined;
+                        return [
+                            <p className="category" onClick={() => data.length > 5 ? se(!e) : undefined}>Most Listened Albums {data.length > 5 ? <span className="symbol">{e ? "step_out" : "step_into"}</span> : undefined}</p>,
+                            <div className="list charts"><LAS data={data.map(a => a[0])} level="al" limit={e ? Infinity : 5} chart={false} list={true} mode={(info) => {
+                                info = info.alid;
+                                return Number(data[data.map(a => a[0]).indexOf(String(info))][1]).val() + "P";
+                            }}/></div>
+                        ]
+                    })()
+                ] : undefined,
+                id.aid ? [
+                    (() => {
+                        //songs
+                        const [e, se] = useState(false);
+                        if(!id.aid) return undefined;
+                        if(!id.aid.ad('sid')) return undefined;
+                        const data = id.aid.ad('sid').map(a => a.sd()).filter(a => a.owner == id.aid);
+                        if(!data.length) return undefined;
+                        return [
+                            <p className="category" onClick={() => data.length > 5 ? se(!e) : undefined}>Your Songs {data.length > 5 ? <span className="symbol">{e ? "step_out" : "step_into"}</span> : undefined}</p>,
+                            <div className="list charts"><LAS data={data} level="s" limit={e ? Infinity : 5}/></div>
+                        ]
+                    })(),
+                    (() => {
+                        //collabs
+                        const [e, se] = useState(false);
+                        if(!id.aid) return undefined;
+                        if(!id.aid.ad('sid')) return undefined;
+                        const data = id.aid.ad('sid').map(a => a.sd()).filter(a => a.owner != id.aid);
+                        if(!data.length) return undefined;
+                        return [
+                            <p className="category" onClick={() => data.length > 5 ? se(!e) : undefined}>Collaborations {data.length > 5 ? <span className="symbol">{e ? "step_out" : "step_into"}</span> : undefined}</p>,
+                            <div className="list charts"><LAS data={data} level="s" limit={e ? Infinity : 5}/></div>
+                        ]
+                    })(),
+                    (() => {
+                        //albums
+                        const [e, se] = useState(false);
+                        if(!id.aid) return undefined;
+                        if(!id.aid.ad('alid')) return undefined;
+                        const data = id.aid.ad('alid').map(a => a.ed()).filter(a => a.owner == id.aid);
+                        if(!data.length) return undefined;
+                        data.sort((a,b) => b.age - a.age);
+                        return [
+                            <p className="category" onClick={() => data.length > 5 ? se(!e) : undefined}>Your Albums {data.length > 5 ? <span className="symbol">{e ? "step_out" : "step_into"}</span> : undefined}</p>,
+                            <div className="list new artists"><MAI data={data} level="al" limit={e ? Infinity : 5}/></div>
+                        ]
+                    })(),
+                    (() => {
+                        //uploaded for you
+                        const [e, se] = useState(false);
+                        if(!id.aid) return undefined;
+                        if(!id.aid.ad('alid')) return undefined;
+                        const data = id.aid.ad('alid').map(a => a.ed()).filter(a => a.owner != id.aid);
+                        if(!data.length) return undefined;
+                        data.sort((a,b) => b.age - a.age);
+                        return [
+                            <p className="category" onClick={() => data.length > 5 ? se(!e) : undefined}>Your Albums (Co-Owned) {data.length > 5 ? <span className="symbol">{e ? "step_out" : "step_into"}</span> : undefined}</p>,
+                            <div className="list charts"><MAI data={data} level="al" limit={e ? Infinity : 5}/></div>
+                        ]
+                    })()
+                ] : undefined
+            ] : undefined,
+            id.aid && !E ? <button onClick={() => AJAX('/myaccount/stats/')}>Profile Stats</button> : undefined
         ]
     }
     return render(<T/>, display);
