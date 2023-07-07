@@ -1,7 +1,8 @@
 import {idb} from "./indexed.js";
 const maindb = {};
 const o = location.protocol.includes("https"); const Q = globalThis;
-const config = {apiKey: "AIzaSyAjt64j8mtVi9UEpyY2dMUpJ9kHT9XfUlM",authDomain: "rtdb-ce214.firebaseapp.com",databaseURL: "https://rtdb-ce214-default-rtdb.firebaseio.com",projectId: "rtdb-ce214",storageBucket: "rtdb-ce214.appspot.com",messagingSenderId: "906009944646",appId: "1:906009944646:web:8ed0f826d799d9217a2047",measurementId: "G-M0PPHM2MKF",storageBucket: 'gs://rtdb-ce214.appspot.com',}
+const config = {apiKey: "AIzaSyCkdtvsuS79NzK8QIRNJoleTBK8YgU8AUM",authDomain: "audhub-db.firebaseapp.com",databaseURL: "https://audhub-db-default-rtdb.firebaseio.com",projectId: "audhub-db",storageBucket: "audhub-db.appspot.com",messagingSenderId: "1001437617026",appId: "1:1001437617026:web:0d9c11299aeac9a70dcd9b",measurementId: "G-7JM1160W8E"};
+
 //let [app, analytics] = [null, null];
 const app = o ? (await import("https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js")).initializeApp(config) : null;
 const analytics = o ? (await import("https://www.gstatic.com/firebasejs/9.17.1/firebase-analytics.js")).getAnalytics(app) : null;
