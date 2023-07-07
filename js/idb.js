@@ -829,7 +829,6 @@ const database = async (txt, sec) => {
         },
         async update(){
             const context = (await get(ref(db))).val();
-            console.log(context);
             Object.assign(maindb, property(context, ["aid", "sid", "alid", "gid"]));
             if(ck.get("id")) maindb.id = context.uid[ck.get("id")];
             Object.assign(maindb, {likes: await idb.get("likes"), queue: await idb.get("queue"), users: Object.keys(context.uid).length});
