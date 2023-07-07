@@ -317,11 +317,12 @@ function AJAX(url, S2){
         progress.style.display = "block";
         if(!event.lengthComputable){
             progress.max = 100;
-            progress.value = 100;
+            progress.value = 50;
             return false;
+        } else {
+            progress.max = event.total;
+            progress.value = event.loaded;
         }
-        progress.max = event.total;
-        progress.value = event.loaded;
     };
     xhr.onload = function(){
         let html = new DOMParser().parseFromString(xhr.responseText, "text/html");
@@ -345,11 +346,11 @@ function AJAX(url, S2){
             progress.style.display = "block";
             if(!event.lengthComputable){
                 progress.max = 100;
-                progress.value = 100;
-                return false;
+                progress.value = 70;
+            } else {
+                progress.max = event.total;
+                progress.value = event.loaded;
             }
-            progress.max = event.total;
-            progress.value = event.loaded;
         };
         xhr2.onload = function(){
             progress.style.display = "none";
