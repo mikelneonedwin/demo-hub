@@ -507,11 +507,11 @@ Q.rtdb = {
         })
         const updates = {};
         updates[`/sid/${SID}`] = info;
-        const xGid = (await get(ref(db, `gid/${GID}/sid`))).val();
+        const xGid = (await get(ref(db, `gid/${GID}/sid`))).val() || [];
         xGid.push(SID);
         updates[`/gid/${GID}/sid`] = xGid;
         for(let cur of info.aid.toArray()){
-            const availA = (await get(ref(db, `aid/${cur}/sid`))).val();
+            const availA = (await get(ref(db, `aid/${cur}/sid`))).val() || [];
             availA.push(SID);
             updates[`aid/${cur}/sid`] = availA;
         }
@@ -571,11 +571,11 @@ Q.rtdb = {
             exs.push(refined.sid[refined.sid.length - 1]);
         }
         all[`/alid/${refined.alid}`] = refined;
-        const xGid = (await get(ref(db, `/gid/${refined.gid}/alid`))).val();
+        const xGid = (await get(ref(db, `/gid/${refined.gid}/alid`))).val() || [];
         xGid.push(refined.alid);
         all[`/gid/${refined.gid}/alid`] = xGid;
         for(const log of refined.aid.toArray()){
-            const xA = (await get(ref(db, `/aid/${log}/alid`))).val();
+            const xA = (await get(ref(db, `/aid/${log}/alid`))).val() || [];
             xA.push(refined.alid);
             all[`/aid/${log}/alid`] = xA;
         }
