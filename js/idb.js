@@ -287,7 +287,7 @@ Q.rtdb = {
         await new Promise(async (resolve, reject) => {
             if(info.img){
                 monitor.start();
-                await deleteObject(ref(db, ms.get("id", "img")));
+                await deleteObject(sref(sdb, ms.get("id", "img")));
                 const uploadTask = uploadBytesResumable(sref(sdb, `/uid/${ms.get("id", "uid")}/img`), info.img, {type: info.img.type});
                 uploadTask.on('state_changed', snapshot => {
                     const status = Math.floor(snapshot.bytesTransferred / snapshot.totalBytes * 100);
