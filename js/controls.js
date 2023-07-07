@@ -853,6 +853,8 @@ function LAS({data, chart = true, limit = 200, level, list, mode}){
     })
 }
 function MAI({level, data, limit = Infinity, h}){
+    console.log(data, level);
+    if(1) return;
     if(typeof data[0] != "object"){
         if(typeof data[0] == "undefined"){
             data = Object.values(data);
