@@ -904,3 +904,28 @@ const cdb = {
         return result;
     }
 }
+function PRG(){
+    return {
+        start(){
+            this.info = document.querySelector("info") || document.body.appendChild(document.createElement("info"));
+            const Cover = this.Cover;
+            render(<Cover/>, this.info);
+        },
+        progress(val, txt){
+            const Cover = this.Cover;
+            render(<Cover val={val} txt={txt}/>, this.info);
+        },
+        close(){
+            unmount(this.info);
+        },
+        Cover({val = 0, txt = ''}){
+            return <div id="cover">
+                <div className="cover"></div>
+                <div className="body">
+                    <progress value={val} min="0" max="100"></progress>
+                    <span>{txt}</span>
+                </div>
+            </div>
+        }
+    }
+}
