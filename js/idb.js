@@ -290,7 +290,7 @@ Q.rtdb = {
                 await deleteObject(ref(db, ms.get("id", "img")));
                 const uploadTask = uploadBytesResumable(sref(sdb, `/uid/${ms.get("id", "uid")}/img`), info.img, {type: info.img.type});
                 uploadTask.on('state_changed', snapshot => {
-                    const status = snapshot.bytesTransferred / snapshot.totalBytes * 100;
+                    const status = Math.floor(snapshot.bytesTransferred / snapshot.totalBytes * 100);
                     monitor.progress(status, `Uploading Image ${status}%`);
                 }, error => {
                     reject(error);
@@ -480,7 +480,7 @@ Q.rtdb = {
             state.start();
             const uploadTask = uploadBytesResumable(sref(sdb, `sid/${SID}/audio`), info.url, {type: info.url.type});
             uploadTask.on('state_changed', snapshot => {
-                const prg = snapshot.bytesTransferred / snapshot.totalBytes * 100
+                const prg = Math.floor(snapshot.bytesTransferred / snapshot.totalBytes * 100)
                 state.progress(prg, `Processing audio \n ${prg}%`);
             }, error => {
                 state.progress(0, 'ERROR!');
@@ -492,9 +492,9 @@ Q.rtdb = {
         })
         await new Promise((resolve,_) => {
             if(typeof info.img == "string") return resolve(true);
-            const uploadTask = uploadBytesResumable(sref(db, `sid/${SID}/img`), info.img, {type: info.img.type});
+            const uploadTask = uploadBytesResumable(sref(sdb, `sid/${SID}/img`), info.img, {type: info.img.type});
             uploadTask.on('state_changed', snapshot => {
-                const prg = snapshot.bytesTransferred / snapshot.totalBytes * 100;
+                const prg = Math.floor(snapshot.bytesTransferred / snapshot.totalBytes * 100);
                 state.progress(prg, `Processing image \n ${prg}%`);
             }, error => {
                 state.progress(0, 'ERROR!');
@@ -552,7 +552,7 @@ Q.rtdb = {
         await new Promise((resolve,_) => {
             const uploadTask = uploadBytesResumable(sref(sdb, `/alid/${alid}/img`), info.img, {type: info.img.type});
             uploadTask.on('state_changed', snapshot => {
-                const prg = snapshot.bytesTransferred / snapshot.totalBytes * 100;
+                const prg = Math.floor(snapshot.bytesTransferred / snapshot.totalBytes * 100);
                 const lv = (length + prg) / standard * 100;
                 state.progress(lv, `Processing Album Art \n ${prg}%`);
             }, error => {
