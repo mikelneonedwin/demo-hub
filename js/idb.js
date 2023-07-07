@@ -517,16 +517,15 @@ Q.rtdb = {
     },
     log: async function (info){
         let resp = {error: []};
-        let f = (await get(ref(db), 'uid')).val();
-        f = Object.values(f);
-        f.forEach(a => {
-            const str = [a.username.toLowerCase(), String(a.contact)];
-            if(str.includes(info.key) && a.pwd == info.pwd){
+        let f = Object.values((await get(ref(db, 'uid'))).val());
+        for(const a of f){
+            console.log(a);
+            if(a.username == info.key || info.contact == info.key && a.pwd == info.pwd){
                 resp.id = a.uid;
                 resp.success = true;
                 resp.username = a.username;
             }
-        })
+        }
         if(!resp.success){
             resp.error.push("Wrong login or password");
         }
