@@ -908,24 +908,28 @@ function PRG(){
     return {
         start(){
             this.info = document.querySelector("info") || document.body.appendChild(document.createElement("info"));
-            const Cover = this.Cover;
-            render(<Cover/>, this.info);
+            this.info.innerHTML = '';
+            this.info.appendChild(this.Cover(val, txt));
         },
         progress(val, txt){
-            const Cover = this.Cover;
-            render(<Cover val={val} txt={txt}/>, this.info);
+            this.info.innerHTML = '';
+            this.info.appendChild(this.Cover(val, txt));
         },
         close(){
             unmount(this.info);
         },
-        Cover({val = 0, txt = ''}){
-            return <div id="cover">
-                <div className="cover"></div>
-                <div className="body">
-                    <progress value={val} min="0" max="100"></progress>
-                    <span>{txt}</span>
-                </div>
-            </div>
+        Cover(val = 0, txt = ''){
+            const lv1 = document.createElement("div");
+            lv1.id = "cover";
+            const lv2 = lv1.appendChild(document.createElement("div"));
+            lv2.className = "cover";
+            const lv3 = lv1.appendChild(document.createElement("div"));
+            lv3.className = "body";
+            const lv4 = lv3.appendChild(document.createElement("progress"));
+            lv4.min = "0"; lv4.max="100"; lv4.value = val;
+            const lv5 = lv3.appendChild(document.createElement("span"));
+            lv5.innerText = txt;
+            return lv1;
         }
     }
 }
