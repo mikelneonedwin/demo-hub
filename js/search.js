@@ -13,7 +13,7 @@ function IR(){
             if(Object.values(ms.get("alid")).length > 0){
                 let results = match(q, Object.values(ms.get("alid")).map(a => {
                     let ans = {id: a.alid};
-                    ans.name1 = names(a.aid);
+                    ans.name1 = a.alid.ed('names');
                     ans.name2 = a.name;
                     return ans;
                 }), 'id', ['name1', 'name2']);
