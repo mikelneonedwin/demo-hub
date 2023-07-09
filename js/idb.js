@@ -441,9 +441,8 @@ Q.rtdb = {
                 const uploadTask = uploadBytesResumable(sref(sdb, `aid/${info.aid}/img`), info.img, {type: info.img.type});
                 uploadTask.on('state_changed', () => {}, (error) => {throw error}, async() => {
                     res(await getDownloadURL(uploadTask.snapshot.ref))
-                });
+                })
             })
-            info.img = await (await uploadBytes(sref(sdb, `aid/${info.aid}/img`), info.img, {type: info.img.type})).ref.getDownloadURLAsync();
             const updates = {};
             updates[`/aid/${info.aid}/img`] = info.img
             updates[`/uid/${ms.get("id", "uid")}`] = {img: info.img, aid: info.aid};
