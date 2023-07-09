@@ -54,6 +54,7 @@ function IR(){
     function AL(){
         const [more, smore] = useState(false);
         const list = aid.ad('alid');
+        if(!list) return undefined;
         if(list.length == 0) return undefined;
         return [
             <p className="category" onClick={() => smore(!more)}>Albums <span className="symbol">{more ? "step_out" : "step_into"}</span></p>,
