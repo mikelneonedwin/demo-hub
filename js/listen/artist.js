@@ -7,11 +7,6 @@ function IR(){
         if(aid.ad() == undefined) return AJAX("/");
         else {
             document.title = `${aid.ad('name')} | AudHub`;
-            if(aid.ad('sid').length > 0){
-                const pick = aid.ad('sid').map(a => a.sd()).sort((a,b) => b.age - a.age).map(a => a.sid);
-                //...
-                //playThis(pick[0], pick);
-            }
         }
     }
     function Lv1(){
@@ -98,9 +93,6 @@ function IR(){
         ]
     }
     function TCA(){
-        let date = new Date();
-        date.setTime(aid.ad('age'));
-        date = date.toDateString();
         const singles = aid.ad('sid').filter(a => a.sd('alid') == undefined).length;
         const plays = aid.ad('streams') + (2 * aid.ad('downloads'));
         const mobile = [
@@ -109,7 +101,7 @@ function IR(){
             [<th>Career Plays</th>, <td>{plays}</td>],
             [<th>Gain</th>,<td>{aid.ad('recent')}</td>],
             [<th>Singles</th>, <td>{singles}</td>],
-            [<th>Albums</th>, <td>{aid.ad('alid').length}</td>],
+            [<th>Albums</th>, <td>{aid.ad('alid') ? aid.ad('alid').length : 0}</td>],
         ];
         const desktop = mobile.reduce((a,b,c) => {
             if(c % 2 == 0){
