@@ -341,12 +341,14 @@ Q.rtdb = {
                 recents[`aid/${a.aid}/recent`]= 0;
             }
         })
-        Object.values(ms.get('alid')).forEach(a => {
-            if((Math.abs(ts - a.recent_time) / (1000 * 60 * 60 * 24)) >= 7){
-                recents[`alid/${a.alid}/recent_time`] = ts;
-                recents[`alid/${a.alid}/recent`]= 0;
-            }
-        })
+        if(ms.get('alid')){
+            Object.values(ms.get('alid')).forEach(a => {
+                if((Math.abs(ts - a.recent_time) / (1000 * 60 * 60 * 24)) >= 7){
+                    recents[`alid/${a.alid}/recent_time`] = ts;
+                    recents[`alid/${a.alid}/recent`]= 0;
+                }
+            })
+        }
         if(Object.keys(recents).length) await update(ref(db), recents);
         let data = {};
         let path = {sid: `sid/${sid}/${type}`};
