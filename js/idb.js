@@ -393,7 +393,7 @@ Q.rtdb = {
         state.progress(30, 'Processing...');
         const img = () => `data:image/svg+xml;base64,${btoa(`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="#222"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-size="48" font-family="Arial" fill="#fff">${info.name.charAt(0).toUpperCase()}</text></svg>`)}`
         let resp = {error: [], id: '', success: undefined};
-        let f = Object.values((await get(ref(db, 'uid'))).val());
+        let f = Object.values((await get(ref(db, 'uid'))).val()) || [];
         f.forEach(b => {
             if(b.username.toLowerCase() == info.username.toLowerCase()) {
                 resp.error.push("Username already exists");
