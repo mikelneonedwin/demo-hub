@@ -1,16 +1,6 @@
 function IR(){
     function TT(){
         const f = useRef(0);
-        useEffect(() => {
-            if(1) return false;
-            const d = Array.from(f.current.querySelectorAll("img, div, i"));
-            d.forEach(a => {
-                a.onclick = () => undefined;
-                Object.keys(a).filter(a => a.startsWith("_")).forEach(b => {
-                    if(a[b].onClick) a[b].onClick = () => AJAX('/charts/artists');
-                })
-            });
-        })
         const TS = SRT(ms.get("sid"), "s");
         const T3M = TS.slice(0,5).map((a,b) => <tr><td>{b + 1}. {a.sid.sd('names')} - {a.name} {a.feat ? ` (feat. ${a.feat})`: undefined}</td></tr>)
         const T2M = TS.slice(0,3).map((a,b) => <tr><td>{b + 1}. {a.sid.sd('names')} - {a.name} {a.feat ? ` (feat. ${a.feat})`: undefined}</td></tr>)

@@ -1,15 +1,1 @@
-@media only screen and (orientation: portrait){
-    display>div>div{
-        width: 44% !important;
-        margin-right: 2% !important;
-        margin-left: 2% !important;
-        margin-bottom: 2%;
-    }
-}
-div.list {
-    white-space: normal !important;
-}
-div.no-left {
-    margin-top: 1%;
-    margin-left: 0 !important;
-}
+@media only screen and (orientation: portrait){ display>div>div{ width: 44% !important; margin-right: 2% !important; margin-left: 2% !important; margin-bottom: 2%; } } div.list { white-space: normal !important; } div.no-left { margin-top: 1%; margin-left: 0 !important; }

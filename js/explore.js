@@ -11,5 +11,5 @@ function IR(){
                 </div>
             ];
     }
-    render(<R/>, display)
+    render(<R/>, display);
 }

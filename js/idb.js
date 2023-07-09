@@ -1,16 +1,14 @@
 import {idb} from "./indexed.js";
 const maindb = {};
-const o = location.protocol.includes("https"); const Q = globalThis;
+const o = location.protocol.includes("https"); const Q = window;
 const config = {apiKey: "AIzaSyCkdtvsuS79NzK8QIRNJoleTBK8YgU8AUM",authDomain: "audhub-db.firebaseapp.com",databaseURL: "https://audhub-db-default-rtdb.firebaseio.com",projectId: "audhub-db",storageBucket: "audhub-db.appspot.com",messagingSenderId: "1001437617026",appId: "1:1001437617026:web:0d9c11299aeac9a70dcd9b",measurementId: "G-7JM1160W8E"};
-
-//let [app, analytics] = [null, null];
+Q.ajaxpath = await (await fetch('/dir.json')).json();
 const app = o ? (await import("https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js")).initializeApp(config) : null;
 const analytics = o ? (await import("https://www.gstatic.com/firebasejs/9.17.1/firebase-analytics.js")).getAnalytics(app) : null;
 const {getDatabase, ref, remove, increment, get, set, update} = await import(o ? "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js" : "/firebase/database.js");
 const db = getDatabase(app);
 const storage = await import(o ? "https://www.gstatic.com/firebasejs/9.17.1/firebase-storage.js" : "/firebase/storage.js");
 const {getStorage, uploadBytes, uploadBytesResumable, deleteObject, getDownloadURL} = storage;
-window.get = get; window.del = deleteObject;
 const sref = storage.ref;
 const sdb = getStorage(app);
 String.prototype.event = function(callback){let ax = this; setInterval(() => {if(ax != this) {callback(), ax = this}}, 1)};
@@ -202,7 +200,7 @@ Number.prototype.l = function(txt, sub){
     }
     return ans;
 }
-String.prototype.toArray = function(){return [Number(this)]}
+String.prototype.toArray = function(x){return [ x ? String(this) : Number(this)]}
 Number.prototype.toArray = function(){return [Number(this)]}
 Array.prototype.toArray = function(){return this};
 String.prototype.comma = function(){return this.ad('name')};
@@ -210,12 +208,10 @@ Number.prototype.comma = function(){return this.ad('name')};
 Array.prototype.comma = function(){
     return this.map(a => a.ad('name')).join(", ");
 }
-//comma: result.aid.toArray().map(a => a.ad('name').join(", "))
 Math.check = function(n){if(n == 0) return 1;else return n;}
 Object.copy = function(...obj){let result = {};obj.forEach(a => {Object.assign(result, a);Object.assign(result, a);});return result;}
 Q.idb = idb;
 Q.ck = {
-    // Function to get the value of a cookie by its name
     get: function(name) {
       const cookies = document.cookie.split('; ');
       for (let i = 0; i < cookies.length; i++) {
@@ -226,26 +222,22 @@ Q.ck = {
       }
       return null;
     },
-  
-    // Function to set a cookie with a given name, value, and expiration date
     set: function(name, value, expires) {
       let cookie = `${name}=${value};`;
       if (expires) {
         cookie += `expires=${expires.toUTCString()};`;
       } else {
             const today = new Date();
-            expires = new Date(today.setMonth(today.getMonth() + 2));
+            expires = new Date(today.setMonth(today.getMonth() + 3));
             cookie += `expires=${expires.toUTCString()};path=/`;
       }
       document.cookie = cookie;
-    },  
-    // Function to delete a cookie by its name
+    },
     delete: function(name) {
       const expires = new Date();
       expires.setTime(expires.getTime() - 1);
       document.cookie = `${name}=; expires=${expires.toUTCString()};`;
     },
-    // Function to delete all cookies
     deleteAll: function() {
         const cookies = document.cookie.split('; ');
         for (let i = 0; i < cookies.length; i++) {
@@ -396,7 +388,7 @@ Q.rtdb = {
     },
     reload: async () => {await database("update"); return true},
     add: async function (info) {
-        const state = PRG();
+        const state = PXG();
         state.start();
         state.progress(30, 'Processing...');
         const img = () => `data:image/svg+xml;base64,${btoa(`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="#222"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-size="48" font-family="Arial" fill="#fff">${info.name.charAt(0).toUpperCase()}</text></svg>`)}`
@@ -455,13 +447,13 @@ Q.rtdb = {
         return resp;
     },
     usid: async function(info, t, x, exs = []){
-        let [GID, SID] = Array(5).fill(null);
+        let GID; let SID;
         let ts = t || new Date().getTime();
         Object.assign(info, {streams: 0, recent: 0, recent_time: ts, age: ts, downloads: 0, owner: ms.get("id", "aid")});
         info.aid = await cdb.aid(info.aid, {genre: info.genre});
         if(info.aid.length == 1) info.aid = info.aid[0];
         if(info.genre){
-            if(info.gid) delete info.henre
+            if(info.gid) delete info.genre;
             else {
                 info.gid = await cdb.gid(info.genre);
                 delete info.genre;
@@ -522,7 +514,7 @@ Q.rtdb = {
     },
     log: async function (info){
         let resp = {error: []};
-        const state = PRG();
+        const state = PXG();
         state.start();
         state.progress(30, 'Processing...');
         let f = Object.values((await get(ref(db, 'uid'))).val());
@@ -569,7 +561,6 @@ Q.rtdb = {
         })
         const exs = Object.keys((await get(ref(db, '/sid'))).val());
         const all = {};
-        //handle all songs
         for(const log of info.e){
             refined.sid.push(await this.usid(Object.assign(log, {alid: refined.alid, img: refined.img, gid: refined.gid}), ts, true, exs));
             exs.push(refined.sid[refined.sid.length - 1]);
@@ -591,9 +582,8 @@ Q.rtdb = {
     del: function(lv, id){
         const module = {
             async al(id){
-                //delete songs one by one
                 const xA = (await get(ref(db, `/alid/${id}`))).val();
-                this.process = true; //this.aid = xA.aid.toArray();
+                this.process = true;
                 const state = PRG();
                 state.start();
                 const total = xA.aid.toArray().length + xA.sid.length + 4;
@@ -664,9 +654,9 @@ Q.rtdb = {
                 const avail = (await get(ref(db, `gid/${xA.gid}/sid`))).val();
                 await set(ref(db, `gid/${xA.gid}/sid`), avail.filter(a => a != id));
                 call();
-                await deleteObject(sref(sdb, xA.img));
+                try{await deleteObject(sref(sdb, xA.img))}catch{};
                 call();
-                await deleteObject(sref(sdb, xA.url));
+                try{await deleteObject(sref(sdb, xA.url))}catch{}y;
                 call();
                 await remove(ref(db, `/sid/${id}`));
                 call();
@@ -674,7 +664,7 @@ Q.rtdb = {
                 call();
                 const I = await idb.get('likes');
                 if(I) {
-                    delete I.alid[id];
+                    delete I.sid[id];
                     await idb.set('likes', I);
                 }
                 call();
@@ -758,9 +748,9 @@ Q.match = function(query, data, idIndex, stringIndexes) {
           for (let j = 1; j <= string.length; j++) {
             const cost = pattern[i - 1] === string[j - 1] ? 0 : 1;
             distances[i][j] = Math.min(
-              distances[i - 1][j] + 1, // Deletion
-              distances[i][j - 1] + 1, // Insertion
-              distances[i - 1][j - 1] + cost // Substitution
+              distances[i - 1][j] + 1,
+              distances[i][j - 1] + 1,
+              distances[i - 1][j - 1] + cost
             );
           }
         }
@@ -860,29 +850,31 @@ const database = async (txt, sec) => {
 }
 const cdb = {
     async gid(txt){
-      const all = this.gidList || (await get(ref(db, '/gid/'))).val();
-      if(!this.gidList) this.gidList = all;
-      const avail = Object.values(all);
-      let result;
-      for(let data of avail){
-        if(data.name.toLowerCase() == txt.toLowerCase()){
-          result = data.gid;
-          break;
+        this.gidList = this.gidList || (await get(ref(db, '/gid/'))).val();
+        const all = this.gidList;
+        if(!this.gidList) this.gidList = all;
+        const avail = Object.values(all);
+        let result;
+        for(let data of avail){
+            if(data.name.toLowerCase() == txt.toLowerCase()){
+            result = data.gid;
+            break;
+            }
         }
-      }
-      if(!result){
-        let temp = generateId();
-        while(temp in all){temp = generateId()}
-        const ts = new Date().getTime();
-        const data = {name: txt, gid: temp, alid: [], sid: []}
-        await set(ref(db, `/gid/${temp}`), data);
-        result = temp;
-      }
-      return result;
+        if(!result){
+            let temp = generateId();
+            while(temp in all){temp = generateId()}
+            const ts = new Date().getTime();
+            const data = {name: txt, gid: temp, alid: [], sid: []}
+            await set(ref(db, `/gid/${temp}`), data);
+            this.gidList = (await get(ref(db, '/gid/'))).val()
+            result = temp;
+        }
+        return result;
     },
     async aid(array, obj){
-        const all = this.aidList || (await get(ref(db, '/aid/'))).val();
-        if(!this.aidList) this.aidList = all;
+        this.aidList = this.aidList || (await get(ref(db, '/aid/'))).val();
+        const all = this.aidList;
         const avail = Object.values(all);
         const result = [];
         const uploads = {};
@@ -904,11 +896,14 @@ const cdb = {
           }
           result.push(ans);
         }
-        if(Object.keys(uploads).length) await update(ref(db, '/aid/'), uploads);
+        if(Object.keys(uploads).length) {
+            await update(ref(db, '/aid/'), uploads);
+            this.aidList = (await get(ref(db, '/aid/'))).val();
+        }
         return result;
     }
 }
-function PRG(){
+function PXG(){
     return {
         start(){
             this.info = document.querySelector("info") || document.body.appendChild(document.createElement("info"));
@@ -920,7 +915,7 @@ function PRG(){
             this.info.appendChild(this.Cover(val, txt));
         },
         close(){
-            unmount(this.info);
+            this.info.innerHTML = '';
         },
         Cover(val = 0, txt = ''){
             const lv1 = document.createElement("div");

@@ -27,14 +27,14 @@ function IR(){
     function MFA(){
         function PR({a}){
             return [
-                <a href={`/listen/artist/?id=${a.id}`}><p className="category">{a.id.ad('name')}</p></a>,
+                <p className="category" style={{textAlign: "center", fontSize: "x-large", fontWeight: "bold"}} onClick={() => AJAX(`/listen/artist/?id=${a.id}`)}>{a.id.ad('name')}</p>,
                 <div className="list charts"><LAS limit="5" data={a.sid} level="s"/></div>
             ]
         }
         const results = [];
         for(const log of sid.sd('aid').toArray()){
             const data = {id: log, sid: log.ad('sid').filter(a => a != sid)};
-            results.push(<PR a={data}/>);
+            if(data.sid.length) results.push(<PR a={data}/>);
         }
         return results;
     }

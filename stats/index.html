@@ -35,48 +35,7 @@
         <script src="/js/react.production.min.js"></script>
         <script src="/js/react-dom.production.min.js"></script>
         <script src="/js/idb.js" type="module"></script>
-        <style>
-            section>p {
-                display: inline-block;
-                font-size: larger;
-                font-family: circula;
-                font-weight: bold;
-            }
-            section {
-                text-align: center;
-                display: flex;
-                align-items: center;
-                justify-content: space-evenly;
-                background-color: #222;
-                border-bottom-left-radius: 15px;
-                border-bottom-right-radius: 15px;
-                height: 2em;
-                margin-bottom: 1%;
-            }
-            @media only screen and (orientation: landscape){
-                table,tbody,thead,tr {
-                    width: 100%;
-                    display: block;
-                }
-                tr>*:nth-child(2){
-                    width: 40%;
-                }
-                tr>*:not(tr>*:nth-child(2)) {
-                    width: 11%;
-                    text-align: center;
-                }
-                tr>* {
-                    display: inline-block;
-                    text-align: left;
-                }
-                th {
-                    text-align: center;
-                }
-            }
-            table {
-                line-height: 2em;
-            }
-        </style>
+        <link rel="stylesheet" href="/css/stats.css">
     </head>
     <body>
         <!--Top Panel-->

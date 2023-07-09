@@ -306,87 +306,107 @@ const SC = memo(({sid, vol, svl, download, play, ssh, shuffle, slp, loop, sp, pv
         ]
     }
 })
-const hscroll = {};
-function AJAX(url, S2){
-    Z.IR = undefined;
-    const txt = typeof url == "object" ? new URL(url).pathname : url;
-    hscroll[location.href] = pageYOffset || scrollY;
-    const xhr = new XMLHttpRequest;
-    xhr.open('GET', txt, true);
-    xhr.onprogress = (event) => {
-        progress.style.display = "block";
-        if(!event.lengthComputable){
-            progress.max = 100;
-            progress.value = 50;
-            return false;
-        } else {
-            progress.max = event.total;
-            progress.value = event.loaded;
-        }
-    };
-    xhr.onload = function(){
-        let html = new DOMParser().parseFromString(xhr.responseText, "text/html");
-        unmount(display);
-        display.innerHTML = html.querySelector("display").innerHTML;
-        document.title = html.title;
-        Array.from(document.getElementsByTagName("style")).forEach(a => {
-            a.parentElement.removeChild(a);
-        })
-        const Allowed = ["/css/google-font.css", "/all.css", "/big.css", "/small.css", "css/google-font.css", "all.css", "big.css", "small.css"];
-        Array.from(document.querySelectorAll("[rel=stylesheet]")).filter(a => !Allowed.includes(a.getAttribute("href")) || a.getAttribute("data-id")).forEach(a => {
-            a.parentElement.removeChild(a);
-        })
-        Array.from(html.getElementsByTagName("style")).forEach(a => document.head.appendChild(a));
-        Array.from(html.querySelectorAll("[rel=stylesheet]") ).forEach(a => {
-            if(!document.querySelector(`[href="${a.getAttribute("href")}"]`)) document.head.appendChild(a);
-        });
-        const xhr2 = new XMLHttpRequest;
-        xhr2.open('GET', Array.from(html.getElementsByTagName("script")).pop().src, true);
-        xhr2.onprogress = (event) => {
+const AJAX = (() => {
+    const hscroll = {}; const ajaxbox = {}; const indexed = {};
+    return async function(url){
+        Z.IR = undefined;
+        let txt;
+        if(url instanceof URL) txt = url.pathname;
+        else if(typeof url == "object") txt = url.pathname;
+        else if(typeof url == "string" && url.includes(":")) txt = new URL(url).pathname;
+        else txt = (url.startsWith("/") ? new URL(`${location.origin}${url}`) : new URL(`${location.origin}${location.pathname}${url}`)).pathname;
+        txt = txt != "/" ? `/${txt.split('/').filter(a => a != '').join("/")}/` : "/"
+        let vail;
+        if(url instanceof URL) vail = url.href;
+        else if(typeof url == "object") vail = url.href;
+        else if(typeof url == "string" && url.includes(":")) vail = new URL(url).href;
+        else vail = (url.startsWith("/") ? new URL(`${location.origin}${url}`) : new URL(`${location.origin}${location.pathname}${url}`)).href;
+        hscroll[location.href] = scrollY;
+        if(!ajaxbox[txt]){
+            const max = [...ajaxpath.js[txt].toArray(true), ...(ajaxpath.css[txt] ? ajaxpath.css[txt].toArray(true) : [])].length * 100;
             progress.style.display = "block";
-            if(!event.lengthComputable){
-                progress.max = 100;
-                progress.value = 70;
-            } else {
-                progress.max = event.total;
-                progress.value = event.loaded;
+            progress.max = max;
+            let count = 0;
+            ajaxbox[txt] = {css:[], js:[]};
+            for(const script of ajaxpath.js[txt].toArray(true)){
+                if(script in indexed) ajaxbox[txt].js.push(indexed[script]);
+                else {
+                    await new Promise((resolve,_) => {
+                        const xhr = new XMLHttpRequest;
+                        xhr.open('GET', script, true);
+                        xhr.onprogress = event => {
+                            if (!event.lengthComputable) progress.value = (count + 100)  / max * 100;
+                            else progress.value = ((event.loaded / event.total * 100) + count) / max * 100;
+                        }
+                        xhr.onload = () => {
+                            ajaxbox[txt].js.push(xhr.responseText);
+                            indexed[script] = xhr.responseText;
+                            resolve(true);
+                        }
+                        xhr.send();
+                    })
+                }
+                count += 100;
             }
-        };
-        xhr2.onload = function(){
-            progress.style.display = "none";
-            let code = Babel.transform(xhr2.responseText, {presets: ['es2015'], plugins: ['transform-react-jsx']}).code;
-            const script = document.createElement("script");
-            script.textContent = code;
-            document.head.appendChild(script);
-            if(!S2) history.pushState("", "", txt);
-            typeof IR == "function" ? IR() : undefined;
-            const x = hscroll[location.href];
-            window.scroll(0, x);
-            render(<NB/>, document.querySelector("navbar"));
-            ATA();
+            if(ajaxpath.css[txt]){
+                for(const script of ajaxpath.css[txt].toArray(true)){
+                    if(script in indexed) ajaxbox[txt].css.push(indexed[script]);
+                    else {
+                        await new Promise((resolve,_) => {
+                            const xhr = new XMLHttpRequest;
+                            xhr.open('GET', script, true);
+                            xhr.onprogress = event => {
+                                if (!event.lengthComputable) progress.value = (count + 100)  / max * 100;
+                                else progress.value = ((event.loaded / event.total * 100) + count) / max * 100;
+                            }
+                            xhr.onload = () => {
+                                ajaxbox[txt].css.push(xhr.responseText);
+                                indexed[script] = xhr.responseText;
+                                resolve(true);
+                            }
+                            xhr.send();
+                        })
+                    }
+                    count += 100;
+                }
+            }
+    
         }
-        xhr2.send();
+        Array.from(document.getElementsByTagName("style")).forEach(a => a.parentElement.removeChild(a));
+        const Allowed = ["/css/google-font.css", "/all.css", "/big.css", "/small.css", "css/google-font.css", "all.css", "big.css", "small.css"];
+        Array.from(document.querySelectorAll("[rel=stylesheet]")).filter(a => !Allowed.includes(a.getAttribute("href"))).forEach(a =>  a.parentElement.removeChild(a));
+        document.title = ajaxpath.title[txt];
+        for(const script of ajaxbox[txt].js){document.head.appendChild(document.createElement("script")).textContent = Babel.transform(script, {presets: ['es2015'], plugins: ['transform-react-jsx']}).code;}
+        for(const css of ajaxbox[txt].css){document.head.appendChild(document.createElement("style")).textContent = css;}
+        const x = hscroll[location.href];
+        window.scroll(0, x);
+        history.pushState("", "", vail);
+        IR();
+        render(<NB/>, document.querySelector("navbar"));
+        progress.style.display = "none";
+        progress.value = "0";
     }
-    xhr.send();
-    Z.onpopstate = function(event){
-        AJAX(event.target.location, true);
+})()
+Z.addEventListener("click", event => {
+    const tree = [];
+    let state = event.target;
+    while(state.parentElement){
+        tree.push(state.parentElement);
+        state = state.parentElement;
     }
-}
-function ATA(){
-    Array.from(document.getElementsByTagName("a")).filter(a => !a.className).forEach(a => {
-        a.onclick = async(event) => {
-            if(!a.getAttribute("href")) return false;
-            event.preventDefault();
-            AJAX(a.href);
+    if(tree.some(a => a.tagName == "A" && a.href && !a.getAttribute("class"))){
+        event.preventDefault();
+        for(const elem of tree){
+            if(elem.tagName == "A" && elem.href && !elem.getAttribute("class")) return AJAX(elem.href);
         }
-    })
-}
+    }
+});
+Z.onpopstate = function(event){AJAX(event.target.location, true)};
 async function idbload(){
     render(<NB/>, document.querySelector("navbar"));
     if(!wide) document.querySelector("navbar").onclick = () => document.querySelector("navbar").classList.remove("visible");
     render(<P/>, document.querySelector("panel"));
-    typeof IR == "function" ? IR() : undefined;
-    ATA();
+    IR();
     const data = await idb.get("queue");
     if(data && data.psid) PT(data.psid, data.queue, false, data.c);
 }
@@ -402,8 +422,7 @@ function PT(sid, queue, pplay = true, C = false){
     }
     if(queue) sessionStorage.setItem("q", JSON.stringify(queue)); else sessionStorage.setItem("q", JSON.stringify([sid]));
     unmount(document.querySelector("controls"));
-    render(<CTRL psid={sid} xes={queue} pplay={pplay} C={C}/>, document.querySelector("controls"));
-    return ATA();
+    return render(<CTRL psid={sid} xes={queue} pplay={pplay} C={C}/>, document.querySelector("controls"));
 }
 function NB(){
     function U() {
@@ -454,9 +473,7 @@ function P(){
     let inputRef = useRef(0);
     useEffect(() => {
         inputRef.current.onkeydown = (e) => {
-            if(e.key == "Enter"){
-                return AJAX(`/search/?search=${inputRef.current.value}`);
-            }
+            if(e.key == "Enter") return AJAX(`/search/?search=${inputRef.current.value}`);
         };
     })
     if(wide){
@@ -524,6 +541,7 @@ const AH = {
                 return !Object.keys(ms.get("likes").sid).includes(a);
             })
             key2 = key2Temp.map(a => ms.get('sid', a)).slice(0,50)[0];
+            if(!key2) return undefined;
             return (
                 <div onClick={() => AJAX(`/playlists/for-you/`)}>
                     <img src={key2.img}/>
@@ -533,7 +551,7 @@ const AH = {
             )
         }
         function L(){
-            if(!ms.get('likes')) return undefined;
+            if(!ms.get('likes') || !Object.values(ms.get('likes/sid')).length) return undefined;
             let key1 = ms.get('sid')[Object.entries(ms.get('likes', 'sid')).filter(a => a[0].sd()).sort((a,b) => b[1] - a[1]).shift().shift()];
             return (
                 <div onClick={() => AJAX('/library/')}>
@@ -647,10 +665,11 @@ const AH = {
         function MG(){
             if(!ms.get('likes')) return undefined;
             const av = Object.values(ms.get('likes', 'gid')).reduce((a,b) => a+b) / Object.values(ms.get('likes', 'sid')).length;
-            const k1 = SRT(Object.entries(ms.get('likes', 'gid')).filter(a => a[1] >= av).sort((a,b) => b[1] - a[1]).map(a => a[0].gd('sid')).reduce((a,b) => {a.push(...b); return a}, []).slice(0,100), "s");
+            const k1 = SRT(Object.entries(ms.get('likes', 'gid')).filter(a => a[1] >= av).sort((a,b) => b[1] - a[1]).map(a => a[0].gd('sid')).reduce((a,b) => {a.push(...b); return a}, []).slice(0,100), "s")[0];
+            if(!k1) return undefined;
             return (
                 <div onClick={() => AJAX('/playlists/my_genres/')}>
-                    <img src={k1[0].img}/>
+                    <img src={k1.img}/>
                     <span>My Genres</span>
                     <span>Similar Songs</span>
                 </div>
@@ -720,35 +739,18 @@ const AH = {
     AR: function(){return <MAI level="ar" data={Object.values(ms.get('aid')).shuffle()} type="obj" limit="20" />}    
 }
 function LAS({data, chart = true, limit = 200, level, list, mode}){
+    let temp;
     if(typeof data[0] != "object"){
         if(Array.isArray(data)) {
-            if(level == "ar") data = data.map(a => a.ad());
-            if(level == "al") data = data.map(a => a.ed());
-            else data = data.map(a => a.sd());
-        }
-        else {data = Object.values(data)};
-    }
-    if(chart){
-        let nan = [];
-        let ts = new Date().getTime();
-        let [MA, MP, MR] = Array(3).fill(0);
-        data.forEach((e) => {
-            e.ts = (Math.abs(ts - e.age) / (1000 * 60 * 60 * 24));
-            e.plays = e.streams + (e.downloads * 2);
-            MA = Math.max(MA, e.ts);
-            MR = Math.max(MR, e.recent);
-            MP = Math.max(MP,e.plays);
-        });
-        data.forEach((e,b) => {
-            e.ps = (((e.plays/MP) * (Math.check(e.recent)/MR)) / (e.ts/MA));
-            if(isNaN(e.ps)) {nan.push(data[b]); delete data[b];}
-        })
-        data = data.filter(a => a).sort((a,b) => b.ps - a.ps);
-        data.push(...nan);
-    }
+            if(level == "ar") temp = data.map(a => a.ad());
+            else if(level == "al") temp = data.map(a => a.ed());
+            else temp = data.map(a => a.sd());
+        } else temp = Object.values(data);
+    } else temp = [...data];
+    if(chart){temp = SRT(temp, level)};
     if(level){
         if(level == "ar"){
-            return data.slice(0,limit).map((a,b) => {
+            return temp.slice(0,limit).map((a,b) => {
                 function hc(){
                    AJAX(`/listen/artist?id=${a.aid}`);
                 }
@@ -781,7 +783,7 @@ function LAS({data, chart = true, limit = 200, level, list, mode}){
             })
         }
         else if(level == "al"){
-            return data.slice(0,limit).map((a,b) => {
+            return temp.slice(0,limit).map((a,b) => {
                 function hc(){
                    AJAX(`/listen/album?id=${a.alid}`);
                 }
@@ -814,9 +816,9 @@ function LAS({data, chart = true, limit = 200, level, list, mode}){
             })
         }
     }
-    return data.slice(0,limit).map((a,b) => {
+    return temp.slice(0,limit).map((a,b) => {
         function hc(){
-            PT(a.sid,data);
+            PT(a.sid,temp);
         }
         function download(event){
             event.stopPropagation();
@@ -935,14 +937,11 @@ function SRT(dx, lv, s){
             if(lv == "s") dt = dx.map(a => a.sd());
             else if(lv == "ar") dt = dx.map(a => a.ad());
             else if(lv == "al") dt = dx.map(a => a.ed());
-        } else dt = dx;
-    } else {
-        dt = Object.values(dx);
-    }
+        } else dt = Object.values(dx);
+    } else dt = Object.values(dx);
     let nan = [];
     let ts = new Date().getTime();
     let [MA, MP, MR] = Array(3).fill(0);
-
     dt.forEach((e) => {
         e.ts = Z.cts(e.age);
         e.plays = e.streams + (e.downloads * 2);
@@ -1141,6 +1140,7 @@ const Genres = [
     <option value="Afrobeats">Afrobeats</option>,
     <option value="Alternative">Alternative</option>,
     <option value="Country">Country</option>,
+    <option value="Drill">Drill</option>,
     <option value="Fuji">Fuji</option>,
     <option value="Gospel">Gospel</option>,
     <option value="Hip-Hop">Hip-Hop</option>,
@@ -1156,5 +1156,5 @@ const Genres = [
     <option value="Reggae">Reggae</option>,
     <option value="Rock">Rock</option>,
     <option value="Soul">Soul</option>,
-    <option value="Traditional">Traditional</option>,
+    <option value="Trap">Trap</option>,
 ]

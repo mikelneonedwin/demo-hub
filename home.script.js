@@ -16,7 +16,7 @@ function IR(){
             <div className="list new playlist"><AH.P/></div>,
             <p className="category"><a href="/charts/songs">Top Songs <span className="symbol">arrow_forward_Ios</span></a></p>,
             <div className="list charts">
-                <LAS data={ms.get("sid")} limit={5}/>
+                <LAS data={ms.get("sid")} level="s" limit={5}/>
                 <div data-old-grad onClick={() => AJAX('/charts/songs')}><p className="symbol nav">navigation</p></div>
             </div>
         ]

@@ -35,69 +35,7 @@
         <script src="/js/react.production.min.js"></script>
         <script src="/js/react-dom.production.min.js"></script>
         <script src="/js/idb.js" type="module"></script>
-        <style>
-            section, table {
-                width: 100%;
-                display: block;
-            }
-            th, td {
-                text-align: left;
-                font-family: circula;
-            }
-            section table table td {
-                font-family: ui !important;
-                font-size: medium;
-            }
-            tr {
-                width: 100%;
-            }
-            th {
-                font-size: larger;
-                background-clip: text;
-                -webkit-background-clip: text;
-                background-image: var(--audhub-gradient);
-                font-weight: bold;
-                appearance: none;
-                margin-top: -3%;
-                margin-bottom: -2.5%;
-                /* display: inline-block; */
-                -webkit-text-fill-color: transparent;
-            }
-            tbody {
-                background-color: #0c0c0c;
-            }
-            @media only screen and (orientation: landscape){
-                section>table>tbody>tr>td:not(td>table td) {
-                    width: 48%;
-                    padding-right: 1%;
-                    padding-left: 1%;
-                    display: inline-block;
-                    margin: auto;
-                }
-                tbody, section>table>tbody>tr {
-                    width: 100%;
-                    display: block;
-                }
-                section img {
-                    height: 10em;
-                }
-            }
-            section tr:not(table table tr){
-                padding: 1%;
-            }
-            @media only screen and (orientation: portrait){
-                section img {
-                    height: 7em;
-                }
-                td {
-                    font-size: small;
-                }
-                tbody {
-                    display: block;
-                    width: 100%;
-                }
-            }
-            </style>
+        <link rel="stylesheet" href="/css/charts.css">
     </head>
     <body>
         <!--Top Panel-->
