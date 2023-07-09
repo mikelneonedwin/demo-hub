@@ -850,7 +850,7 @@ const database = async (txt, sec) => {
 }
 const cdb = {
     async gid(txt){
-        this.gidList = this.gidList || (await get(ref(db, '/gid/'))).val();
+        this.gidList = this.gidList || (await get(ref(db, '/gid/'))).val() || {};
         const all = this.gidList;
         if(!this.gidList) this.gidList = all;
         const avail = Object.values(all);
@@ -873,7 +873,7 @@ const cdb = {
         return result;
     },
     async aid(array, obj){
-        this.aidList = this.aidList || (await get(ref(db, '/aid/'))).val();
+        this.aidList = this.aidList || (await get(ref(db, '/aid/'))).val() || {};
         const all = this.aidList;
         const avail = Object.values(all);
         const result = [];
