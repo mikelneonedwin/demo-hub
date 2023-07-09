@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Experiments</title>
+    <link rel="icon" href="/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1">
+  </head>
+  <body>
+    <input type="file" accept="*"/>
+    <button type="submit">Upload</button>
+    <script type="module">
+      await import("https://www.gstatic.com/firebasejs/9.17.1/firebase-storage.js").then(resp => window.storage = resp);
+      await import("https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js").then(resp => window.database = resp);
+      </script>
+      <script>
+          String.prototype.toArray = function(){return [Number(this)]}
+          Number.prototype.toArray = function(){return [Number(this)]}
+          Array.prototype.toArray = function(){return this};
+        const file = document.querySelector("[type=file]");
+        file.onchange = (e) => {
+          const reader = new FileReader;
+          reader.onload = () => {
+            window.open(reader.result);
+          }
+          reader.readAsDataURL(e.target.files[0]);
+        }
+        const db = true;
+        const cdb = {
+            async gid(txt){
+                this.gidList = this.gidList || (await get(ref(db, '/gid/'))).val();
+                const all = this.gidList;
+                if(!this.gidList) this.gidList = all;
+                const avail = Object.values(all);
+                let result;
+                for(let data of avail){
+                    if(data.name.toLowerCase() == txt.toLowerCase()){
+                    result = data.gid;
+                    break;
+                    }
+                }
+                if(!result){
+                    let temp = generateId();
+                    while(temp in all){temp = generateId()}
+                    const ts = new Date().getTime();
+                    const data = {name: txt, gid: temp, alid: [], sid: []}
+                    await set(ref(db, `/gid/${temp}`), data);
+                    result = temp;
+                }
+                return result;
+            },
+            async aid(array, obj){
+                this.aidList = this.aidList || (await get(ref(db, '/aid/'))).val();
+                const all = this.aidList;
+                const avail = Object.values(all);
+                const result = [];
+                const uploads = {};
+                const ts = new Date().getTime();
+                for(let txt of array){
+                  let ans;
+                  for(let data of avail){
+                    console.log(data.name.toLowerCase() == txt.toLowerCase());
+                    continue;
+                    if(data.name.toLowerCase() == txt.toLowerCase()){
+                      ans = data.aid;
+                      break;
+                    }
+                  }
+                  if(!ans){
+                    let temp = generateId();
+                    while(temp in all || result.includes(temp)){temp = generateId()}
+                    ans = temp;
+                    const data = {name: txt, genre: obj.genre, aid: temp, img: obj.img || '/favicon.png', alid: [], sid: [], age: ts, recent_time: ts, recent: 0, streams: 0, downloads: 0, owner : obj.owner || undefined}
+                    uploads[temp] = data;
+                  }
+                  result.push(ans);
+                }
+                if(Object.keys(uploads).length) await update(ref(db, '/aid/'), uploads);
+                return result;
+            }
+        }
+        function generateId() {
+            let id = '';
+            let char = Array(10).fill(0).map((a,b) => a+b);
+            while(id.length < 6){
+                let index = Math.round(Math.random() * (char.length - 1));
+                if(char[index] == 0 && id.length == 0) continue;
+                id += char[index];
+            }
+            return Number(id);
+        }
+      </script>
+  </body>
+</html>
