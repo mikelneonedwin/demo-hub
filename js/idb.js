@@ -437,6 +437,12 @@ Q.rtdb = {
         })
         if(!resp.error.length){
             info.aid = (await cdb.aid([info.name], {genre: info.genre, owner: ms.get("id", "uid")}))[0];
+            info.img = await new Promise((res,_) => {
+                const uploadTask = uploadBytesResumable(sref(sdb, `aid/${info.aid}/img`), info.img, {type: info.img.type});
+                uploadTask.on('state_changed', () => {}, (error) => {throw error}, async() => {
+                    res(await getDownloadURL(uploadTask.snapshot.ref))
+                });
+            })
             info.img = await (await uploadBytes(sref(sdb, `aid/${info.aid}/img`), info.img, {type: info.img.type})).ref.getDownloadURLAsync();
             const updates = {};
             updates[`/aid/${info.aid}/img`] = info.img
