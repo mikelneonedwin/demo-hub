@@ -19,13 +19,6 @@
           Number.prototype.toArray = function(){return [Number(this)]}
           Array.prototype.toArray = function(){return this};
         const file = document.querySelector("[type=file]");
-        file.onchange = (e) => {
-          const reader = new FileReader;
-          reader.onload = () => {
-            window.open(reader.result);
-          }
-          reader.readAsDataURL(e.target.files[0]);
-        }
         const db = true;
         const cdb = {
             async gid(txt){
