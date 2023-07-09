@@ -435,7 +435,7 @@ Q.rtdb = {
         })
         if(!resp.error.length){
             info.aid = (await cdb.aid([info.name], {genre: info.genre, owner: ms.get("id", "uid")}))[0];
-            info.img = (await uploadBytes(sref(sdb, `aid/${info.aid}/img`), info.img, {type: info.img.type})).ref.getDownloadURL();
+            info.img = await (await uploadBytes(sref(sdb, `aid/${info.aid}/img`), info.img, {type: info.img.type})).ref.getDownloadURLAsync();
             const updates = {};
             updates[`/aid/${info.aid}/img`] = info.img
             updates[`/uid/${ms.get("id", "uid")}`] = {img: info.img, aid: info.aid};
