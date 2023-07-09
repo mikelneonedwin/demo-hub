@@ -461,7 +461,7 @@ Q.rtdb = {
         }
         GID = info.gid;
         SID = generateId();
-        const present = exs.length ? exs : Object.keys((await get(ref(db, '/sid/'))).val());
+        const present = exs.length ? exs : Object.keys((await get(ref(db, '/sid/'))).val()) || [];
         while(present.includes(SID)){
             SID = generateId()
             exs.push(SID);
@@ -534,7 +534,7 @@ Q.rtdb = {
     },
     calid: async function(info){
         await rtdb.reload();
-        const ex = Object.keys((await get(ref(db, '/alid/'))).val());
+        const ex = Object.keys((await get(ref(db, '/alid/'))).val()) || [];
         let alid = generateId();
         while(ex.includes(alid)){alid = generateId()}
         const ts = new Date().getTime();
@@ -559,7 +559,7 @@ Q.rtdb = {
                 resolve(true);
             })
         })
-        const exs = Object.keys((await get(ref(db, '/sid'))).val());
+        const exs = Object.keys((await get(ref(db, '/sid'))).val()) || [];
         const all = {};
         for(const log of info.e){
             refined.sid.push(await this.usid(Object.assign(log, {alid: refined.alid, img: refined.img, gid: refined.gid}), ts, true, exs));
@@ -829,7 +829,7 @@ const database = async (txt, sec) => {
             const context = (await get(ref(db))).val();
             Object.assign(maindb, property(context, ["aid", "sid", "alid", "gid"]));
             if(ck.get("id")) maindb.id = context.uid[ck.get("id")];
-            Object.assign(maindb, {likes: await idb.get("likes"), queue: await idb.get("queue"), users: Object.keys(context.uid).length});
+            Object.assign(maindb, {likes: await idb.get("likes"), queue: await idb.get("queue"), users: context.uid ? Object.keys(context.uid).length : 0});
             await this.write(maindb);
             return maindb;
         },
