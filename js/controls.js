@@ -715,7 +715,7 @@ const AH = {
     },
     N: function(){
         let key1= Object.values(ms.get('sid')).map(a => {if (!a.alid) return a}).filter(a => {if(a) return a});
-        let key2= Object.values(ms.get('alid'));
+        let key2= Object.values(ms.get('alid') || {});
         let ts = new Date().getTime();
         let key = [];
         if(!key1.length && !key2.length) return undefined;
