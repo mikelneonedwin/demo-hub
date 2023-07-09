@@ -430,7 +430,7 @@ Q.rtdb = {
         state.start();
         state.progress(50, 'Processing...');
         const resp = {error: [], success: null};
-        Object.values(((await get(ref(db, 'aid')))).val()).forEach(a => {
+        Object.values(((await get(ref(db, 'aid')))).val() || []).forEach(a => {
             if(a.name.toLowerCase() == info.name.toLowerCase()) resp.error.push("Artist already exists");
         })
         if(!resp.error.length){
@@ -517,7 +517,7 @@ Q.rtdb = {
         const state = PXG();
         state.start();
         state.progress(30, 'Processing...');
-        let f = Object.values((await get(ref(db, 'uid'))).val());
+        let f = Object.values((await get(ref(db, 'uid'))).val()) || [];
         for(const a of f){
             if((a.username == info.key || info.contact == info.key) && a.pwd == info.pwd){
                 resp.id = a.uid;
