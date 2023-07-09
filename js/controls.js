@@ -937,8 +937,8 @@ function SRT(dx, lv, s){
             if(lv == "s") dt = dx.map(a => a.sd());
             else if(lv == "ar") dt = dx.map(a => a.ad());
             else if(lv == "al") dt = dx.map(a => a.ed());
-        } else dt = Object.values(dx);
-    } else dt = Object.values(dx);
+        } else dt = Object.values(dx || {});
+    } else dt = Object.values(dx || {});
     let nan = [];
     let ts = new Date().getTime();
     let [MA, MP, MR] = Array(3).fill(0);
