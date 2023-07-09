@@ -393,7 +393,7 @@ Q.rtdb = {
         state.progress(30, 'Processing...');
         const img = () => `data:image/svg+xml;base64,${btoa(`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="#222"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-size="48" font-family="Arial" fill="#fff">${info.name.charAt(0).toUpperCase()}</text></svg>`)}`
         let resp = {error: [], id: '', success: undefined};
-        let f = Object.values((await get(ref(db, 'uid'))).val()) || [];
+        let f = Object.values((await get(ref(db, 'uid'))).val() || {})
         f.forEach(b => {
             if(b.username.toLowerCase() == info.username.toLowerCase()) {
                 resp.error.push("Username already exists");
@@ -430,7 +430,7 @@ Q.rtdb = {
         state.start();
         state.progress(50, 'Processing...');
         const resp = {error: [], success: null};
-        Object.values(((await get(ref(db, 'aid')))).val() || []).forEach(a => {
+        Object.values(((await get(ref(db, 'aid')))).val() || {}).forEach(a => {
             if(a.name.toLowerCase() == info.name.toLowerCase()) resp.error.push("Artist already exists");
         })
         if(!resp.error.length){
@@ -461,7 +461,7 @@ Q.rtdb = {
         }
         GID = info.gid;
         SID = generateId();
-        const present = exs.length ? exs : Object.keys((await get(ref(db, '/sid/'))).val()) || [];
+        const present = exs.length ? exs : Object.keys((await get(ref(db, '/sid/'))).val() || {});
         while(present.includes(SID)){
             SID = generateId()
             exs.push(SID);
@@ -517,7 +517,7 @@ Q.rtdb = {
         const state = PXG();
         state.start();
         state.progress(30, 'Processing...');
-        let f = Object.values((await get(ref(db, 'uid'))).val()) || [];
+        let f = Object.values((await get(ref(db, 'uid'))).val() || {});
         for(const a of f){
             if((a.username == info.key || info.contact == info.key) && a.pwd == info.pwd){
                 resp.id = a.uid;
@@ -534,7 +534,7 @@ Q.rtdb = {
     },
     calid: async function(info){
         await rtdb.reload();
-        const ex = Object.keys((await get(ref(db, '/alid/'))).val()) || [];
+        const ex = Object.keys((await get(ref(db, '/alid/'))).val() || {});
         let alid = generateId();
         while(ex.includes(alid)){alid = generateId()}
         const ts = new Date().getTime();
@@ -559,7 +559,7 @@ Q.rtdb = {
                 resolve(true);
             })
         })
-        const exs = Object.keys((await get(ref(db, '/sid'))).val()) || [];
+        const exs = Object.keys((await get(ref(db, '/sid'))).val() || {});
         const all = {};
         for(const log of info.e){
             refined.sid.push(await this.usid(Object.assign(log, {alid: refined.alid, img: refined.img, gid: refined.gid}), ts, true, exs));
