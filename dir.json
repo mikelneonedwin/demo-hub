@@ -10,7 +10,7 @@
         "/myaccount/": "/js/myacct.js",
         "/myaccount/stats/": "/js/acct/stats.js",
         "/myaccount/artist/create/": ["/js/warn.js", "/js/acct/artist/create.js"],
-        "/myaccount/artist/claim/": ["/js/warn.js", "js/acct/artist/claim.js"],
+        "/myaccount/artist/claim/": ["/js/warn.js", "/js/acct/artist/claim.js"],
         "/search/": "/js/search.js",
         "/search/genres/": "/js/search/genre.js",
         "/search/songs/": "/js/search/song.js",
