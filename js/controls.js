@@ -877,12 +877,12 @@ function MAI({level, data, limit = Infinity, h}){
                 <div key={b} onClick={() => AJAX(`/listen/artist?id=${a.aid}`)}>
                     <img src={a.img}/>
                     <span>{a.name}</span>
-                    <span>{a.streams + (2 * a.downloads)} P • {a.sid.length}S</span>
+                    <span>{a.streams + (2 * a.downloads)} P • {a.sid ? a.sid.length : 0}S</span>
                 </div>
         )
     }
     else if(level == "g"){
-        return data.slice(0,limit).map((a,b) => {
+        return data.slice(0,limit).filter(a => a.sid).map((a,b) => {
             let [MA, MP, MR] = Array(3).fill(0);
             if(!a.sid.length) return undefined;
             const img = a.sid.map(a => a.sd()).map(a => {

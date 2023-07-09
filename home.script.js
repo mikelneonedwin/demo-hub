@@ -10,7 +10,7 @@ function IR(){
                 <p className="category"><a href="/albums/">Albums <span className="symbol">arrow_forward_Ios</span></a></p>,
                 <div className="list new albums"><AH.AL/></div>
             ] : undefined,
-            aid || sid || alid ? [
+            sid || alid ? [
                 <p className="category"><a href="/new/">New <span className="symbol">arrow_forward_Ios</span></a></p>,
                 <div className="list new"><AH.N/></div>,
             ] : undefined,
@@ -18,7 +18,7 @@ function IR(){
                 <p className="category"><a href="/genres/">Genres <span className="symbol">arrow_forward_Ios</span></a></p>,
                 <div className="list new genres"><AH.G/></div>,
             ] : undefined,
-            aid || sid || alid ? [
+            sid || alid ? [
                 <p className="category"><a href="/playlists/">Playlists <span className="symbol">arrow_forward_Ios</span></a></p>,
                 <div className="list new playlist"><AH.P/></div>,
             ] : undefined,
