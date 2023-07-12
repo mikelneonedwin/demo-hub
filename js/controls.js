@@ -202,6 +202,7 @@ function CTRL({psid, pplay = true, xes, C = undefined}){
         let link = document.createElement("a");
         document.body.appendChild(link);
         link.href = sid.sd('url');
+        link.className = "no-ajax";
         link.setAttribute("download", "");
         link.click();
         document.body.removeChild(link);
@@ -817,6 +818,7 @@ function LAS({data, chart = true, limit = 200, level, list, mode}){
             const link = document.createElement("a");
             document.body.appendChild(link);
             link.href = a.url;
+            link.className = "no-ajax";
             link.setAttribute("download", "");
             link.click();
         }
