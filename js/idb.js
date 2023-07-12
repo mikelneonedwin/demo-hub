@@ -267,13 +267,10 @@ const ms = {
         if(maindb[paths[0]]){
             let data;
             try{data = eval(`maindb${paths.map(a => `["${a}"]`).join('')}`)}catch{data = undefined}
-            if(data && data.aid && data.gid && typeof data.gid != "object") Object.assign(data, {names: names(data.aid)});
             return data;
         } else return null;
     },
-    async clear(){
-        return await idb.del(jkl);
-    }
+    async clear(){ return await idb.del(jkl); }
 }
 const rtdb = {
     uid: async function(info){
@@ -281,8 +278,8 @@ const rtdb = {
         await new Promise(async (resolve, reject) => {
             if(info.img){
                 monitor.start();
-                try{await deleteObject(sref(sdb, ms.get("id", "img")))}catch{console.log('IMG DOESN\'T EXIST')};
-                const uploadTask = uploadBytesResumable(sref(sdb, `/uid/${ms.get("id", "uid")}/img`), info.img, {type: info.img.type});
+                try{await deleteObject(sref(sdb, ms.get("id", "img")))}catch{};
+                const uploadTask = uploadBytesResumable(sref(sdb, `/uid/${ms.get("id", "uid")}/${info.img.name}`), info.img, {type: info.img.type});
                 uploadTask.on('state_changed', snapshot => {
                     const status = Math.floor(snapshot.bytesTransferred / snapshot.totalBytes * 100);
                     monitor.progress(status, `Uploading Image ${status}%`);
@@ -431,13 +428,13 @@ const rtdb = {
         if(!resp.error.length){
             info.aid = (await cdb.aid([info.name], {genre: info.genre, owner: ms.get("id", "uid")}))[0];
             info.img = await new Promise((res,_) => {
-                const uploadTask = uploadBytesResumable(sref(sdb, `aid/${info.aid}/img`), info.img, {type: info.img.type});
+                const uploadTask = uploadBytesResumable(sref(sdb, `aid/${info.aid}/${info.img.name}`), info.img, {type: info.img.type});
                 uploadTask.on('state_changed', () => {}, (error) => {throw error}, async() => {
                     res(await getDownloadURL(uploadTask.snapshot.ref))
                 })
             })
             const updates = {};
-            updates[`/aid/${info.aid}/img`] = info.img
+            updates[`/aid/${info.aid}/${info.img.name}`] = info.img
             updates[`/uid/${ms.get("id", "uid")}`] = {img: info.img, aid: info.aid};
             await update(ref(db), updates);
             await rtdb.reload();
@@ -470,7 +467,7 @@ const rtdb = {
         const state = !x ? PRG() : {progress: () => undefined, start: () => undefined, close: () => undefined};
         await new Promise((resolve,_) => {
             state.start();
-            const uploadTask = uploadBytesResumable(sref(sdb, `sid/${SID}/audio`), info.url, {type: info.url.type});
+            const uploadTask = uploadBytesResumable(sref(sdb, `sid/${SID}/${info.url.name}`), info.url, {type: info.url.type});
             uploadTask.on('state_changed', snapshot => {
                 const prg = Math.floor(snapshot.bytesTransferred / snapshot.totalBytes * 100)
                 state.progress(prg, `Processing audio \n ${prg}%`);
@@ -484,7 +481,7 @@ const rtdb = {
         })
         await new Promise((resolve,_) => {
             if(typeof info.img == "string") return resolve(true);
-            const uploadTask = uploadBytesResumable(sref(sdb, `sid/${SID}/img`), info.img, {type: info.img.type});
+            const uploadTask = uploadBytesResumable(sref(sdb, `sid/${SID}/${info.img.name}`), info.img, {type: info.img.type});
             uploadTask.on('state_changed', snapshot => {
                 const prg = Math.floor(snapshot.bytesTransferred / snapshot.totalBytes * 100);
                 state.progress(prg, `Processing image \n ${prg}%`);
@@ -546,7 +543,7 @@ const rtdb = {
         const standard = (info.e.length + 1) * 100;
         let length = 0;
         await new Promise((resolve,_) => {
-            const uploadTask = uploadBytesResumable(sref(sdb, `/alid/${alid}/img`), info.img, {type: info.img.type});
+            const uploadTask = uploadBytesResumable(sref(sdb, `/alid/${alid}/${info.img.name}`), info.img, {type: info.img.type});
             uploadTask.on('state_changed', snapshot => {
                 const prg = Math.floor(snapshot.bytesTransferred / snapshot.totalBytes * 100);
                 const lv = (length + prg) / standard * 100;
@@ -712,6 +709,10 @@ function property(obj, array){
 function names(id){
     let result;
     if(Array.isArray(id)){
+        const fir = id.pop();
+        const oth = id.map(a => ms.get(`aid/${a}/name`));
+        const all = oth.join(", ") + " & " + ms.get(`aid/${fir}/name`);
+        console.log(all);
         id = id.map(a => ms.get(`aid/${a}/name`));
         result = id.splice(0, id.length -1, );
         if(result.length >= 2){
@@ -828,7 +829,14 @@ async function database(txt, sec){
         },
         async update(){
             const context = (await get(ref(db))).val();
-            Object.assign(maindb, {aid: context.aid || {}, sid: context.sid || {}, alid: context.alid || {}, gid: context.gid || {}});
+            Object.assign(maindb, {
+                aid: sort(context.aid || {}, "ar"),
+                gid: sort(context.gid || {}, "g")
+            });
+            Object.assign(maindb, {
+                sid: sort(context.sid || {}, "s"),
+                alid: sort(context.alid || {}, "al")
+            })
             if(ck.get("id")) maindb.id = context.uid[ck.get("id")];
             Object.assign(maindb, {likes: await idb.get("likes") || {sid: {}, gid: {}, aid: {}, alid: {}}, queue: await idb.get("queue"), users: context.uid ? Object.keys(context.uid).length : 0});
             await this.write(maindb);
@@ -857,8 +865,8 @@ async function database(txt, sec){
         k_al: Object.keys(maindb.alid),
         k_s: Object.keys(maindb.sid),
         k_g: Object.keys(maindb.gid),
-        ms_s: Object.keys(maindb.sid).map(a => ms.get('sid/' + a)).reduce((a,b) => {a[b.sid] = b; return a}, {}),
-        ms_al: Object.keys(maindb.alid).map(a => ms.get('alid/' + a)).reduce((a,b) => {a[b.alid] = b; return a}, {}),
+        ms_s: maindb.sid,
+        ms_al: maindb.alid,
         ms_g: maindb.gid,
         ms_ar: maindb.aid,
         l_ms_s: maindb.likes.sid,
@@ -962,7 +970,7 @@ function PXG(){
 Q.START = async function (){
     await database('read');
     const check = setInterval(async() => {
-        if(idbload) {
+        if(typeof idbload == "function") {
             clearInterval(check);
             api(1); await idbload(); api(0);
         }
@@ -970,3 +978,18 @@ Q.START = async function (){
 }
 const v_x_a = location.pathname.replace(/\//g, '');
 if(v_x_a == "signup" || v_x_a == "login") create_api({});
+function sort(x, s){
+    const j = {ar: "aid", s: "sid", al: "alid", g: "gid"}[s];
+    return Object.values(x).map(d => {
+        if(s == "ar" || s == "g"){
+            d.alid = d.alid || [];
+            d.sid = d.sid || [];
+        } else if(s == "al" || s == "s"){
+            d.names = names(d.aid);
+        }
+        return d;
+    }).reduce((a,b) => {
+        a[b[j]] = b;
+        return a;
+    }, {});
+}

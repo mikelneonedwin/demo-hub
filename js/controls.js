@@ -309,6 +309,7 @@ const SC = memo(({sid, vol, svl, download, play, ssh, shuffle, slp, loop, sp, pv
 const AJAX = (() => {
     const hscroll = {}; const ajaxbox = {}; const indexed = {};
     return async function(url){
+        api(1);
         Z.IR = undefined;
         let txt;
         if(url instanceof URL) txt = url.pathname;
@@ -381,10 +382,11 @@ const AJAX = (() => {
         const x = hscroll[location.href];
         window.scroll(0, x);
         history.pushState("", "", vail);
-        api(1); IR(); api(0);
+        await IR();
         render(<NB/>, document.querySelector("navbar"));
         progress.style.display = "none";
         progress.value = "0";
+        api(0);
     }
 })()
 Z.addEventListener("click", event => {
@@ -401,7 +403,12 @@ Z.addEventListener("click", event => {
         }
     }
 });
-Z.onpopstate = function(event){AJAX(event.target.location, true)};
+Z.onpopstate = function(event){
+    if(event.isTrusted){
+        event.preventDefault();
+        AJAX(event.target.location);
+    }
+};
 async function idbload(){
     Z.my_id = ms.get("id") || null;
     render(<NB/>, document.querySelector("navbar"));
