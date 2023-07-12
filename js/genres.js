@@ -1,5 +1,5 @@
 function IR(){
-    const data = Object.values(ms.get('gid')).map(a => a.name).sort().map(a => a.indb('gid'));
+    const data = ov_g.map(a => a.name).sort().map(a => a.indb('gid'));
     render(
         [
             <p className="category">All Genres</p>,

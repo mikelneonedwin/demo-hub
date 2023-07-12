@@ -57,7 +57,9 @@ async function validate(){
         return null;
     }
     const info = {username: form.username.value.toLowerCase(), contact: form.contact.value, name: form.name.value, pwd: form.pwd1.value}
+    api(1);
     const resp = await rtdb.add(info);
+    api();
     if(resp.error.length > 0){
         code.innerText = resp.error[0];
         Object.values(form.children).reduce((a,b) => {a.push(...Object.values(b.children)); return a;}, []).forEach(a => {
@@ -71,7 +73,9 @@ async function validate(){
         if(resp.success){
             code.innerText = `Welcome to AudHub \n ${info.name}`;
             ck.set("id", resp.id);
+            api(1);
             await rtdb.reload();
+            api(0);
             setTimeout(() => location.href = '/', 1000);       
         } else {
             code.innerText = "AN ERROR OCCURED!";

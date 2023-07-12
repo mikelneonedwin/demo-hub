@@ -32,7 +32,7 @@ async function validate(){
         return null;
     }
     const info = {key: form.username.value.toLowerCase(), pwd: form.pwd1.value};
-    const resp = await rtdb.log(info);
+    api(1); const resp = await rtdb.log(info); api(0);
     if(resp.error.length > 0){
         error(resp.error[0])
     } else {

@@ -1,10 +1,10 @@
 function IR(){
     function TT(){
         const f = useRef(0);
-        const TS = SRT(ms.get("sid"), "s");
+        const TS = SRT(ms_s, "s");
         const T3M = TS.slice(0,5).map((a,b) => <tr><td>{b + 1}. {a.sid.sd('names')} - {a.name} {a.feat ? ` (feat. ${a.feat})`: undefined}</td></tr>)
         const T2M = TS.slice(0,3).map((a,b) => <tr><td>{b + 1}. {a.sid.sd('names')} - {a.name} {a.feat ? ` (feat. ${a.feat})`: undefined}</td></tr>)
-        const TAL = SRT(ms.get("alid"), "al");
+        const TAL = SRT(ms_al, "al");
         const T3AL = TAL.slice(0,5).map((a,b) => <tr><td>{b + 1}. {a.alid.sd('names')} • {a.name} • {a.gid.gd('name')}</td></tr>)
         const T2AL = TAL.slice(0,3).map((a,b) => <tr><td>{b + 1}. {a.alid.sd('names')} • {a.name} • {a.gid.gd('name')}</td></tr>)
         const desktop = (
@@ -63,7 +63,7 @@ function IR(){
                 {wide ? desktop : mobile}
                 <p className="category">Top Artists</p>
                 <div ref={f} className="list charts">
-                    <LAS data={ms.get('aid')} level="ar" limit="5"/>
+                    <LAS data={ms_ar} level="ar" limit="5"/>
                     <div data-old-grad onClick={() => AJAX('/charts/artists')}><p className="symbol nav">navigation</p></div>
                 </div>
             </section>

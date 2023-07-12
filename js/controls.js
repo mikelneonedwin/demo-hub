@@ -1,3 +1,4 @@
+const has_alid = (o) => Boolean(o.alid); const $has_alid = (o) => !has_alid(o); const has_sid = (o) => Boolean(o.sid);
 const display = document.querySelector("display"); const Z = globalThis;
 const progress = document.createElement("progress");
 progress.id = "progress";
@@ -7,14 +8,12 @@ const {useState, useRef, useEffect, memo} = React;
 const {render} = ReactDOM;
 const unmount = ReactDOM.unmountComponentAtNode;
 let wide = Z.innerWidth > Z.innerHeight;
-Z.onresize = () => {
-    if(wide != Z.innerWidth > Z.innerHeight) location.href = location.href;
-}
 Z.interval = undefined;
-const cr = setInterval(() => {
-    if(typeof rtdb != "undefined"){
+Z.cr = setInterval(() => {
+    if(typeof START != "undefined"){
         clearInterval(cr);
-        rtdb.start();
+        START();
+        delete Z.cr;
     }
 })
 Array.prototype.shuffle = function(){
@@ -45,7 +44,7 @@ function CTRL({psid, pplay = true, xes, C = undefined}){
     const ar = useRef(0);
     const progRef = useRef(0);
     const [indexes, sxes] = useState(xes);
-    window.y = useState(function(){
+    const y = useState(function(){
         return indexes.map(a => {
             const x = {};
             x[a] = 0;
@@ -60,7 +59,7 @@ function CTRL({psid, pplay = true, xes, C = undefined}){
             sxes(y.map(a => Object.keys(a)[0]));
         }
     }
-    window.mE = useState(function(){
+    const mE = useState(function(){
         let i = indexes.indexOf(sid);
         if(i == -1) i = indexes.indexOf(String(sid));
         if(i == -1) i = indexes.indexOf(Number(sid));
@@ -132,13 +131,13 @@ function CTRL({psid, pplay = true, xes, C = undefined}){
                     clearInterval(RS);
                 })
             }
-            interval = setInterval(() => {
+            interval = setInterval(async() => {
                 elapsed++;
                 if(elapsed >= 30){
                     clearInterval(interval);
-                    rtdb.update('streams', sid);
                     elapsed = 0;
                     ar.current.onplay = () => undefined;
+                    api(1); rtdb.update('streams', sid); api(0);
                 }
             }, 1000)
         };
@@ -199,7 +198,7 @@ function CTRL({psid, pplay = true, xes, C = undefined}){
     }
     sessionStorage.setItem("q", JSON.stringify(indexes));
     function download(){
-        rtdb.update('downloads', sid);
+        api(1); rtdb.update('downloads', sid); api(0);
         let link = document.createElement("a");
         document.body.appendChild(link);
         link.href = sid.sd('url');
@@ -315,7 +314,7 @@ const AJAX = (() => {
         else if(typeof url == "object") txt = url.pathname;
         else if(typeof url == "string" && url.includes(":")) txt = new URL(url).pathname;
         else txt = (url.startsWith("/") ? new URL(`${location.origin}${url}`) : new URL(`${location.origin}${location.pathname}${url}`)).pathname;
-        txt = txt != "/" ? `/${txt.split('/').filter(a => a != '').join("/")}/` : "/"
+        txt = txt != "/" ? `/${txt.split('/').filter(Boolean).join("/")}/` : "/"
         let vail;
         if(url instanceof URL) vail = url.href;
         else if(typeof url == "object") vail = url.href;
@@ -381,14 +380,14 @@ const AJAX = (() => {
         const x = hscroll[location.href];
         window.scroll(0, x);
         history.pushState("", "", vail);
-        IR();
+        api(1); IR(); api(0);
         render(<NB/>, document.querySelector("navbar"));
         progress.style.display = "none";
         progress.value = "0";
     }
 })()
 Z.addEventListener("click", event => {
-    const tree = [];
+    const tree = [event.target];
     let state = event.target;
     while(state.parentElement){
         tree.push(state.parentElement);
@@ -403,6 +402,7 @@ Z.addEventListener("click", event => {
 });
 Z.onpopstate = function(event){AJAX(event.target.location, true)};
 async function idbload(){
+    Z.my_id = ms.get("id") || null;
     render(<NB/>, document.querySelector("navbar"));
     if(!wide) document.querySelector("navbar").onclick = () => document.querySelector("navbar").classList.remove("visible");
     render(<P/>, document.querySelector("panel"));
@@ -426,11 +426,11 @@ function PT(sid, queue, pplay = true, C = false){
 }
 function NB(){
     function U() {
-        if(ms.get('id')){
+        if(my_id){
             return (
                 <div>
-                    <img src={ms.get('id', 'img')}/>
-                    <a><span>{ms.get('id', 'username')}</span></a>
+                    <img src={my_id.img}/>
+                    <a><span>{my_id.username}</span></a>
                 </div>
             )
         } else {
@@ -441,10 +441,6 @@ function NB(){
                 </div>
             )
         }
-    }
-    function urm(path){
-        if(location.pathname == path) return undefined;
-        else return path;
     }
     const Tab = ({icon,path,txt}) => <a href={location.pathname == path ? undefined : path}><span><i className="symbol">{icon}</i>{txt}</span></a>;
     return [
@@ -510,11 +506,10 @@ const AH = {
     P: function(){
         let ts = new Date().getTime();
         function FY(){
-            if(!ms.get('likes')) return undefined;
-            let key1 = Object.keys(ms.get('likes', 'sid')).map(a => a.sd()).filter(a => a);
+            let key1 = l_k_s.map(a => a.sd()).filter(Boolean);
             let key2 = [];
             let key2Temp = [];
-            Object.values(ms.get('sid')).forEach(a => {
+            ov_s.forEach(a => {
                 key1.forEach(b => {
                     if(a.gid == b.gid) key2Temp.push(a.sid);
                     if(Array.isArray(b.aid)){
@@ -522,7 +517,7 @@ const AH = {
                             if(a.feat) if(a.feat.includes(ms.get('aid', `${c}.name`))) key2Temp.push(a.sid);
                         })
                     } else {
-                        if(a.feat) if(a.feat.includes(ms.get('aid')[b.aid].name)) key2Temp.push(a.sid);
+                        if(a.feat) if(a.feat.includes(ms_ar[b.aid].name)) key2Temp.push(a.sid);
                     }
                     if(b.feat) if(b.feat.includes(a.sid.sd('names'))) key2Temp.push(a.sid);
                     if(a.alid && b.alid) if(a.alid == b.alid) key2Temp.push(a.sid);
@@ -537,10 +532,8 @@ const AH = {
                 }
                 return a;
             }, []);
-            key2Temp = key2Temp.filter(a => {
-                return !Object.keys(ms.get("likes").sid).includes(a);
-            })
-            key2 = key2Temp.map(a => ms.get('sid', a)).slice(0,50)[0];
+            key2Temp = key2Temp.filter(a => !l_k_s.includes(a));
+            key2 = key2Temp.map(a => ms_s[a]).slice(0,50)[0];
             if(!key2) return undefined;
             return (
                 <div onClick={() => AJAX(`/playlists/for-you/`)}>
@@ -551,8 +544,8 @@ const AH = {
             )
         }
         function L(){
-            if(!ms.get('likes') || !Object.values(ms.get('likes/sid')).length) return undefined;
-            let key1 = ms.get('sid')[Object.entries(ms.get('likes', 'sid')).filter(a => a[0].sd()).sort((a,b) => b[1] - a[1]).shift().shift()];
+            if(!l_k_s.length) return undefined;
+            let key1 = ms_s[Object.entries(ms.get('likes', 'sid')).filter(a => a[0].sd()).sort((a,b) => b[1] - a[1]).shift().shift()];
             return (
                 <div onClick={() => AJAX('/library/')}>
                     <img src={key1.img}/>
@@ -563,7 +556,7 @@ const AH = {
         }
         function YMAL(){
             if(!ms.get('likes')) return undefined;
-            let key1 = Object.keys(ms.get('likes', 'sid')).map(a => a.sd()).filter(a => a);
+            let key1 = l_k_s.map(a => a.sd()).filter(Boolean);
             let key2 = key1.reduce((a,b) => {
                 if(b.feat) {
                     let feats = b.feat.replaceAll(" & ", ",").replaceAll(", ", ",").split(",");
@@ -574,14 +567,14 @@ const AH = {
                 return a;
             }, []);
             let key3 = [];
-            Object.values(ms.get('aid')).forEach(a => {
+            ov_ar.forEach(a => {
                 if(key2.includes(a.name)) {
-                    if(!Object.keys(ms.get('likes', 'aid')).includes(a.aid)) key3.push(a);
+                    if(!l_k_ar.includes(a.aid)) key3.push(a);
                 }
             });
             if(key3.length == 0){
-                let key4 = Object.keys(ms.get('likes', 'aid')).map(a => ms.get('aid', a).name);
-                Object.values(ms.get('sid')).forEach(a => {
+                let key4 = l_k_ar.map(a => ms_ar[a].name);
+                ov_s.forEach(a => {
                     if(a.feat) a.feat.replaceAll(" & ", ",").replaceAll(", ", ",").split(",").forEach(b => {
                         if(key4.includes(b)); key3.push(a.sid);
                     })
@@ -595,7 +588,7 @@ const AH = {
                 key3.forEach(a => key3Temp.push(...a.sid));
                 key3 = key3Temp;
             }
-            key3 = key3.map(a => ms.get('sid', a));
+            key3 = key3.map(a => ms_s[a]);
             key3.forEach(a => {
                 a.plays = a.streams + (2 * a.downloads);
                 a.ts = (Math.abs(ts - a.age) / (1000 * 60 * 60 * 24));
@@ -619,7 +612,7 @@ const AH = {
         }
         function N(){
             //generates lists of new songs
-            let key1 = Object.values(ms.get('sid')).map(a => {if (!a.alid) return a}).filter(a => {if(a) return a});
+            let key1 = ov_s.map(a => {if (!a.alid) return a}).filter(Boolean);
             key1.sort((a,b) => b.age - a.age);
             if(!key1.length) return undefined;
             key1 = key1[0];
@@ -633,7 +626,7 @@ const AH = {
         }
         function T(){
             //songs on the website with high plays in recent times
-            let key1 = Object.values(ms.get('sid'));
+            let key1 = ov_s;
             key1.sort((a,b) => b.recent - a.recent);
             if(!key1.length) return undefined;
             key1 = key1[0];
@@ -647,7 +640,7 @@ const AH = {
         }
         function R(){
             //sorted by plays
-            let key1 = Object.values(ms.get('sid'));
+            let key1 = ov_s;
             key1.forEach(a => {
                 a.plays = a.streams + (2 * a.downloads);
             });
@@ -663,8 +656,7 @@ const AH = {
             ) 
         }
         function MG(){
-            if(!ms.get('likes')) return undefined;
-            const av = Object.values(ms.get('likes', 'gid')).reduce((a,b) => a+b) / Object.values(ms.get('likes', 'sid')).length;
+            const av = l_ov_g.reduce((a,b) => a+b, 0) / l_ov_s.length;
             const k1 = SRT(Object.entries(ms.get('likes', 'gid')).filter(a => a[1] >= av).sort((a,b) => b[1] - a[1]).map(a => a[0].gd('sid')).reduce((a,b) => {a.push(...b); return a}, []).slice(0,100), "s")[0];
             if(!k1) return undefined;
             return (
@@ -676,7 +668,7 @@ const AH = {
             ) 
         };
         function C(){
-            let key2 = Object.values(ms.get('sid'));
+            let key2 = ov_s;
             key2.forEach(a => {
                 a.plays = a.streams + (2 * a.downloads);
                 a.ts = (Math.abs(ts - a.age) / (1000 * 60 * 60 * 24));
@@ -700,7 +692,7 @@ const AH = {
         }
         function UN(){
             if(!ms.get("likes")) return undefined;
-            let k1 = Object.keys(ms.get('sid')).filter(a => !Object.keys(ms.get("likes", "sid")).includes(a));
+            let k1 = Object.keys(ms_s).filter(a => !l_k_s.includes(a));
             if(k1.length == 0) return undefined;
             k1 = SRT(k1, "s")[0];
             return (
@@ -714,8 +706,8 @@ const AH = {
         return [<C/>,<FY/>, <L/>, <YMAL/>, <N/>, <T/>, <MG/>, <R/>, <UN/>];
     },
     N: function(){
-        let key1= Object.values(ms.get('sid')).map(a => {if (!a.alid) return a}).filter(a => {if(a) return a});
-        let key2= Object.values(ms.get('alid') || {});
+        let key1 = ov_s.map(a => {if (!a.alid) return a}).filter(Boolean);
+        let key2 = Object.assign([], ov_al);
         let ts = new Date().getTime();
         let key = [];
         if(!key1.length && !key2.length) return undefined;
@@ -730,13 +722,12 @@ const AH = {
     },
     G: function(){
         //lists all the genres on the site
-       return <MAI data={ms.get('gid')} type="obj" level="g" limit="10"/>
+       return <MAI data={ms_g} type="obj" level="g" limit="10"/>
     },
     AL: function(){
-        //lists all the albums on the charts
-        return <MAI data={ms.get('alid')} type="obj" level="al" limit="10"/>
+        return <MAI data={ms_al} type="obj" level="al" limit="10"/>
     },
-    AR: function(){return <MAI level="ar" data={Object.values(ms.get('aid')).shuffle()} type="obj" limit="20" />}    
+    AR: function(){return <MAI level="ar" data={ov_ar.shuffle()} type="obj" limit="20" />}    
 }
 function LAS({data, chart = true, limit = 200, level, list, mode}){
     let temp;
@@ -822,7 +813,7 @@ function LAS({data, chart = true, limit = 200, level, list, mode}){
         }
         function download(event){
             event.stopPropagation();
-            rtdb.update('downloads', a.sid);
+            api(1); rtdb.update('downloads', a.sid); api(0);
             const link = document.createElement("a");
             document.body.appendChild(link);
             link.href = a.url;
@@ -871,7 +862,7 @@ function MAI({level, data, limit = Infinity, h}){
             }
         }
     }
-    if(level == "g") data = data.filter(a => a.sid);
+    if(level == "g") data = data.filter(has_sid);
     if(level == "ar"){
         return data.slice(0,limit).map((a,b) => 
                 <div key={b} onClick={() => AJAX(`/listen/artist?id=${a.aid}`)}>
@@ -882,7 +873,7 @@ function MAI({level, data, limit = Infinity, h}){
         )
     }
     else if(level == "g"){
-        return data.slice(0,limit).filter(a => a.sid).map((a,b) => {
+        return data.slice(0,limit).filter(has_sid).map((a,b) => {
             let [MA, MP, MR] = Array(3).fill(0);
             if(!a.sid.length) return undefined;
             const img = a.sid.map(a => a.sd()).map(a => {
@@ -923,7 +914,7 @@ function MAI({level, data, limit = Infinity, h}){
     }else if(level == "p"){
         return data.slice(0,limit).map((a,b) => 
             <div key={b} onClick={() => AJAX(`/playlists/user?id=${a.pid}`)}>
-                <img src={ms.get('sid')[a.sid[0]].img}/>
+                <img src={ms_s[a.sid[0]].img}/>
                 <span>{a.name}</span>
                 <span>By {ms.get('uid')[a.uid].name} • {a.sid.length}S</span>
             </div>
@@ -956,7 +947,7 @@ function SRT(dx, lv, s){
             delete dt[b];
         }
     })
-    dt = dt.filter(a => a).sort((a,b) => b.ps - a.ps);
+    dt = dt.filter(Boolean).sort((a,b) => b.ps - a.ps);
     dt.push(...nan);
     if(s) dt = dt.sort((a,b) => b[s] - a[s]);
     return dt;
@@ -1139,8 +1130,11 @@ const Genres = [
     <option value="Afro/Rap">Afro/Rap</option>,
     <option value="Afrobeats">Afrobeats</option>,
     <option value="Alternative">Alternative</option>,
+    <option value="Countemporary Hip-Hop">Countemporary Hip-Hop</option>,
+    <option value="Countemporary Pop">Countemporary Pop</option>,
     <option value="Country">Country</option>,
     <option value="Drill">Drill</option>,
+    <option value="Emo-Rap">Emo-Rap</option>,
     <option value="Fuji">Fuji</option>,
     <option value="Gospel">Gospel</option>,
     <option value="Hip-Hop">Hip-Hop</option>,

@@ -1,1 +1,1 @@
-function IR(){return render(<CSD stxt="Music Charts" dt={[{txt: "Top Albums", lv: "al", r: "las", s: "charts", d: ms.get('alid')}]}/>, display)}
+function IR(){return render(<CSD stxt="Music Charts" dt={[{txt: "Top Albums", lv: "al", r: "las", s: "charts", d: ms_al}]}/>, display)}

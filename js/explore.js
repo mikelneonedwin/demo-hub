@@ -1,5 +1,5 @@
 function IR(){
-    const data = sessionStorage.getItem("e") ? JSON.parse(sessionStorage.getItem("e")) : (function(){const a = Object.values(ms.get('sid')).shuffle(); sessionStorage.setItem("e", JSON.stringify(a.map(a => a.sid))); return a})();
+    const data = sessionStorage.getItem("e") ? JSON.parse(sessionStorage.getItem("e")) : (function(){const a = ov_s.shuffle(); sessionStorage.setItem("e", JSON.stringify(a.map(a => a.sid))); return a})();
     const total = data.length;
     function R(){
         const [num, snum] = useState(30);

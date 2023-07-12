@@ -1,7 +1,7 @@
 function IR(){
     let alid; 
     const url = new URL(location);
-    const id = ms.get("id") || {};
+    const id = my_id || {};
     if(!url.searchParams.get("id")) return AJAX("/");
     else {
         alid = url.searchParams.get("id");
@@ -12,7 +12,7 @@ function IR(){
     }
     function SA(){
         const [more, smore] = useState(false);
-        let list = Object.values(ms.get('alid')).filter(a => a.alid != alid).filter(a => {
+        let list = ov_al.filter(a => a.alid != alid).filter(a => {
             let states = []
             if(Array.isArray(a.aid)) if(Array.isArray(alid.ed('aid'))) states.push(a.aid.some(a => alid.ed('aid').includes(a))); else states.push(a.aid.includes(alid.ed('aid')));
             else if(Array.isArray(alid.ed('aid'))) states.push(alid.ed('aid').includes(a.aid)); else states.push(alid.ed('aid') == a.aid);

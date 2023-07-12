@@ -6,6 +6,8 @@ Q.ajaxpath = await (await fetch('/dir.json')).json();
 const app = o ? (await import("https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js")).initializeApp(config) : null;
 const analytics = o ? (await import("https://www.gstatic.com/firebasejs/9.17.1/firebase-analytics.js")).getAnalytics(app) : null;
 const {getDatabase, ref, remove, increment, get, set, update} = await import(o ? "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js" : "/firebase/database.js");
+const act = [];
+Q.api = function(n){try{act[n]()}catch{act[0]()}}
 const db = getDatabase(app);
 const storage = await import(o ? "https://www.gstatic.com/firebasejs/9.17.1/firebase-storage.js" : "/firebase/storage.js");
 const {getStorage, uploadBytes, uploadBytesResumable, deleteObject, getDownloadURL} = storage;
@@ -248,7 +250,7 @@ Q.ck = {
         }
     }      
 };
-Q.ms = {
+const ms = {
     query(source, query){
         let result = null;
         source = source.split(".")
@@ -273,7 +275,7 @@ Q.ms = {
         return await idb.del(jkl);
     }
 }
-Q.rtdb = {
+const rtdb = {
     uid: async function(info){
         const monitor = PRG();
         await new Promise(async (resolve, reject) => {
@@ -304,6 +306,7 @@ Q.rtdb = {
         return true;
     },
     update: async function (type, sid) {
+        api(1);
         let ts = new Date().getTime();
         let likes = await idb.get("likes");
         if(likes) {
@@ -329,26 +332,24 @@ Q.rtdb = {
         }
         await idb.set("likes", likes);
         let recents = {};
-        Object.values(ms.get('sid')).forEach(a => {
+        Object.values(maindb.sid).forEach(a => {
             if((Math.abs(ts - a.recent_time) / (1000 * 60 * 60 * 24)) >= 7){
                 recents[`sid/${a.sid}/recent_time`] = ts;
                 recents[`sid/${a.sid}/recent`]= 0;
             }
         })
-        Object.values(ms.get('aid')).forEach(a => {
+        Object.values(maindb.aid).forEach(a => {
             if((Math.abs(ts - a.recent_time) / (1000 * 60 * 60 * 24)) >= 7){
                 recents[`aid/${a.aid}/recent_time`] = ts;
                 recents[`aid/${a.aid}/recent`]= 0;
             }
         })
-        if(ms.get('alid')){
-            Object.values(ms.get('alid')).forEach(a => {
-                if((Math.abs(ts - a.recent_time) / (1000 * 60 * 60 * 24)) >= 7){
-                    recents[`alid/${a.alid}/recent_time`] = ts;
-                    recents[`alid/${a.alid}/recent`]= 0;
-                }
-            })
-        }
+        Object.values(maindb.alid).forEach(a => {
+            if((Math.abs(ts - a.recent_time) / (1000 * 60 * 60 * 24)) >= 7){
+                recents[`alid/${a.alid}/recent_time`] = ts;
+                recents[`alid/${a.alid}/recent`]= 0;
+            }
+        })
         if(Object.keys(recents).length) await update(ref(db), recents);
         let data = {};
         let path = {sid: `sid/${sid}/${type}`};
@@ -378,15 +379,7 @@ Q.rtdb = {
                 await idb.set(type, check);
             }
         }
-    },
-    start: async function (){
-        await database('read');
-        const check = setInterval(() => {
-            if(idbload) {
-                clearInterval(check);
-                idbload();
-            }
-        }, 1000);
+        api(0);
     },
     reload: async () => {await database("update"); return true},
     add: async function (info) {
@@ -663,7 +656,7 @@ Q.rtdb = {
                 call();
                 try{await deleteObject(sref(sdb, xA.img))}catch{};
                 call();
-                try{await deleteObject(sref(sdb, xA.url))}catch{}y;
+                try{await deleteObject(sref(sdb, xA.url))}catch{};
                 call();
                 await remove(ref(db, `/sid/${id}`));
                 call();
@@ -734,6 +727,7 @@ function names(id){
     }
     return result;
 }
+function create_api(s){act[0] = () => {for(const i in s){delete Q[i]}; delete Q.ms; delete Q.rtdb;};act[1] = () => {Object.assign(Q, s, ({ms}), ({rtdb}))};}
 Q.match = function(query, data, idIndex, stringIndexes) {
     if(!Array.isArray(data)) data = Object.values(data);
     function fuzzyMatch(pattern, string) {
@@ -821,7 +815,7 @@ String.prototype.comma = function(){
     return comma(this);
 }
 const jkl = btoa('password');
-const database = async (txt, sec) => {
+async function database(txt, sec){
     const module = {
         async read(){
             const state = await idb.get(jkl);
@@ -834,9 +828,9 @@ const database = async (txt, sec) => {
         },
         async update(){
             const context = (await get(ref(db))).val();
-            Object.assign(maindb, property(context, ["aid", "sid", "alid", "gid"]));
+            Object.assign(maindb, {aid: context.aid || {}, sid: context.sid || {}, alid: context.alid || {}, gid: context.gid || {}});
             if(ck.get("id")) maindb.id = context.uid[ck.get("id")];
-            Object.assign(maindb, {likes: await idb.get("likes"), queue: await idb.get("queue"), users: context.uid ? Object.keys(context.uid).length : 0});
+            Object.assign(maindb, {likes: await idb.get("likes") || {sid: {}, gid: {}, aid: {}, alid: {}}, queue: await idb.get("queue"), users: context.uid ? Object.keys(context.uid).length : 0});
             await this.write(maindb);
             return maindb;
         },
@@ -853,7 +847,33 @@ const database = async (txt, sec) => {
             })
         }
     }
-    return module[txt](sec);
+    const result = await module[txt](sec);
+    const std = {
+        ov_ar: Object.values(maindb.aid),
+        ov_al: Object.values(maindb.alid),
+        ov_s: Object.values(maindb.sid),
+        ov_g: Object.values(maindb.gid),
+        k_ar: Object.keys(maindb.aid),
+        k_al: Object.keys(maindb.alid),
+        k_s: Object.keys(maindb.sid),
+        k_g: Object.keys(maindb.gid),
+        ms_s: Object.keys(maindb.sid).map(a => ms.get('sid/' + a)).reduce((a,b) => {a[b.sid] = b; return a}, {}),
+        ms_al: Object.keys(maindb.alid).map(a => ms.get('alid/' + a)).reduce((a,b) => {a[b.alid] = b; return a}, {}),
+        ms_g: maindb.gid,
+        ms_ar: maindb.aid,
+        l_ms_s: maindb.likes.sid,
+        l_ms_ar: maindb.likes.aid,
+        l_ms_al: maindb.likes.alid,
+        l_ms_g: maindb.likes.gid,
+        l_k_s: Object.keys(maindb.likes.sid),
+        l_k_ar: Object.keys(maindb.likes.aid),
+        l_k_al: Object.keys(maindb.likes.alid),
+        l_k_g: Object.keys(maindb.likes.gid),
+        l_ov_s: Object.values(maindb.likes.sid),
+        l_ov_ar: Object.values(maindb.likes.aid),
+        l_ov_al: Object.values(maindb.likes.alid),
+        l_ov_g: Object.values(maindb.likes.gid)
+    }; create_api(std);
 }
 const cdb = {
     async gid(txt){
@@ -939,3 +959,14 @@ function PXG(){
         }
     }
 }
+Q.START = async function (){
+    await database('read');
+    const check = setInterval(async() => {
+        if(idbload) {
+            clearInterval(check);
+            api(1); await idbload(); api(0);
+        }
+    }, 1000);
+}
+const v_x_a = location.pathname.replace(/\//g, '');
+if(v_x_a == "signup" || v_x_a == "login") create_api({});

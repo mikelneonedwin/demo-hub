@@ -46,7 +46,7 @@ function IR(){
                     if(!a.files[0]) error(a, "Add audio file");
                 })
                 info = {aid: ar.current.value.comma(), name: al.current.value, genre: gr.current.value, img: img[0].current.files[0], e: Array(e).fill(0).map((a,b) => ({name: tr[b].current.value, url: mr[b].current.files[0], feat: fr[b].current.value, aid: ma[b].current.value.comma()}))};
-                await rtdb.calid(info); 
+                api(1); await rtdb.calid(info); api();
             }catch (error){console.error(error)}
         }
         const ent = Array(e).fill(0).map((a,b) => 
@@ -88,8 +88,8 @@ function IR(){
             </div>
         ]
     }
-    if(ms.get('id')) {
-        if(ms.get('id', "aid")) return render(<T/>, display);
+    if(my_id) {
+        if(my_id.aid) return render(<T/>, display);
         else return warn('no_aid');
     } else return warn('no_uid');
 }

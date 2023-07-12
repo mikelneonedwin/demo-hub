@@ -1,5 +1,5 @@
 function IR(){
-    function Create(){
+    function C(){
         const imageRef = useRef(0);
         const imageFile = useRef(0);
         const validateRef = useRef(0);
@@ -34,14 +34,14 @@ function IR(){
                     return false;
                 }
                 const info = {name: artistRef.current.value, genre: genRef.current.value, img: imageFile.current.files[0]};
-                const resp = await rtdb.caid(info);
+                api(1); const resp = await rtdb.caid(info); api();
                 if(resp.error.length > 0){
                     error(imageRef.current.parentElement, resp.error[0]);
                 } else {
                     if(resp.success){
                         codeRef.current.innerText = `${info.name} is officially an Artist`;
                         const url = new URL(location);
-                        await rtdb.reload();
+                        api(1); await rtdb.reload(); api();
                         if(url.searchParams.get("continue")){
                             setTimeout(() => AJAX(url.searchParams.get("continue")), 1000);
                         } else setTimeout(() => AJAX('/'), 1000);       
@@ -53,8 +53,8 @@ function IR(){
             function error(elem, txt){
                 elem.style.outline = "blue solid 2px";
                 elem.focus();
-                elem.addEventListener("change", () => fixed());
-                elem.addEventListener("keydown", () => fixed());
+                elem.addEventListener("change", fixed);
+                elem.addEventListener("keydown", fixed);
                 codeRef.current.innerText = txt;
                 function fixed(){
                     codeRef.current.innerText = "";
@@ -76,11 +76,11 @@ function IR(){
               </form>
         )
     }
-    if(ms.get('id')) {
+    if(my_id) {
         //user is signed in
-        if(ms.get('id').aid) {
+        if(my_id.aid) {
             //user is signed in but has a active account
             warn('aid');
-        } else render(<Create/>, document.querySelector("display"));
+        } else render(<C/>, display);
     } else warn('no_uid');
 }

@@ -1,10 +1,10 @@
 function IR(){
-    if(!ms.get("id")) return location.href = '/signup/';
-    const id = ms.get("id");
+    if(!my_id) return location.href = '/signup/';
+    const id = my_id;
     if(!id.aid) return w('You don\'t have an artist account').then(() => AJAX('/'));
     function T(){
         const ach = [];
-        const aX = Object.values(ms.get("aid")).reduce((a,b) => {
+        const aX = ov_ar.reduce((a,b) => {
             a[b.aid] = {id: b.aid, streams: b.streams + 2 * b.downloads, recent: b.recent};
             return a;
         }, {})
@@ -15,13 +15,15 @@ function IR(){
         ach.push(`No. ${sr} Trending Artist`);
         if(aid.sid && aid.sid.length){
             const sid = aid.sid.map(a => a.sd()).filter(a => !a.alid).map(d => ({id: Number(d.sid), streams: d.streams + d.downloads * 2, recent: d.recent}))
-            const allSid = Object.values(ms.get("sid")).filter(a => !a.alid).map(d => ({id: Number(d.sid), streams: d.streams + d.downloads * 2, recent: d.recent}));
-            const msid = sid.sort((a,b) => b.streams - a.streams)[0].id;
-            const tsid = sid.sort((a,b) => b.recent - a.recent)[0].id;
-            const ma = allSid.sort((a,b) => b.streams - a.streams).map(a => a.id).indexOf(msid) + 1;
-            const ta = allSid.sort((a,b) => b.recent - a.recent).map(a => a.id).indexOf(tsid) + 1;
-            ach.push(`No. ${ma} Most Streamed Single (${msid.sd('name')})`);
-            ach.push(`No. ${ta} Trending Single (${tsid.sd('name')})`);
+            const allSid = ov_s.filter(a => !a.alid).map(d => ({id: Number(d.sid), streams: d.streams + d.downloads * 2, recent: d.recent}));
+            if(sid.length){
+                const msid = sid.sort((a,b) => b.streams - a.streams)[0].id;
+                const tsid = sid.sort((a,b) => b.recent - a.recent)[0].id;
+                const ma = allSid.sort((a,b) => b.streams - a.streams).map(a => a.id).indexOf(msid) + 1;
+                const ta = allSid.sort((a,b) => b.recent - a.recent).map(a => a.id).indexOf(tsid) + 1;
+                ach.push(`No. ${ma} Most Streamed Single (${msid.sd('name')})`);
+                ach.push(`No. ${ta} Trending Single (${tsid.sd('name')})`);
+            }
         }
         if(aid.alid && aid.alid.length){
             const alid = aid.alid.map(a => {
@@ -29,7 +31,7 @@ function IR(){
                 const c = {id: Number(d.alid), streams: d.streams + d.downloads * 2, recent: d.recent};
                 return c;
             });
-            const allAlid = Object.values(ms.get("alid")).map(d => ({id: Number(d.alid), streams: d.streams + d.downloads * 2, recent: d.recent}));
+            const allAlid = ov_al.map(d => ({id: Number(d.alid), streams: d.streams + d.downloads * 2, recent: d.recent}));
             const malid = alid.sort((a,b) => b.streams - a.streams)[0].id;
             const talid = alid.sort((a,b) => b.recent - a.recent)[0].id;
             const ma = allAlid.sort((a,b) => b.streams - a.streams).map(a => a.id).indexOf(malid) + 1;
@@ -37,7 +39,7 @@ function IR(){
             ach.push(`No. ${ma} Most Streamed Album (${malid.ed('name')})`);
             ach.push(`No. ${ta} Trending Album (${talid.ed('name')})`);
         }
-        const chartp = SRT(ms.get("aid"), "ar").map(a => a.aid.toArray());
+        const chartp = SRT(ms_ar, "ar").map(a => a.aid.toArray());
         let pos;
         for(const data of chartp){
             if(data.includes(id.aid)) {
@@ -46,7 +48,7 @@ function IR(){
             }
         }
         ach.push(`No. ${pos} on Artist Chart`);
-        const charts = SRT(ms.get("sid"), "s").map(a => a.aid.toArray());
+        const charts = SRT(ms_s, "s").map(a => a.aid.toArray());
         for(const data of charts){
             if(data.includes(id.aid)) {
                 pos = charts.indexOf(data) + 1;
@@ -55,7 +57,7 @@ function IR(){
         }
         ach.push(`No. ${pos} on Music Chart`);
         pos = 0;
-        const charta = SRT(ms.get("alid"), "al").map(a => a.aid.toArray());
+        const charta = SRT(ms_al, "al").map(a => a.aid.toArray());
         for(const data of charta){
             if(data.includes(id.aid)) {
                 pos = charta.indexOf(data) + 1;
@@ -114,7 +116,25 @@ function IR(){
                         <div>
                             <img src={a.img}/>
                             <div>
-                                <span>{a.name} {a.feat ? wide ? `(feat. ${a.feat})` : a.feat.length <= 10 ? `(feat. ${a.feat})` : `(feat. ${a.feat.split('').slice(0,10).join('')}...)` : ''}<i>{a.p}%</i></span>
+                                <span>
+                                    {/*{a.name} {a.feat ? wide ? `(feat. ${a.feat})` : (a.feat.length <= 10 ? `(feat. ${a.feat})` : `(feat. ${a.feat.split('').slice(0,10).join('')}...)`).slice(17 - ) : ''}*/}
+                                    {(() => {
+                                        let res = '';
+                                        const n = a.name;
+                                        res+=n;
+                                        if(a.feat){
+                                            if(wide) res += ` (feat. ${a.feat})`;
+                                            else { 
+                                                const feat = a.feat.length + n.length + 8 <= 30 ? `(feat. ${a.feat})` : `(feat. ${a.feat.slice(0, 30 - 8 - n.length)}...)`;
+                                                if(n.length >= 17){
+                                                    const add = feat.slice(0, 30-n.length);
+                                                    res += ' ' + add + (add.length < feat.length ? '...' : '');
+                                                } else res += ' ' + feat;
+                                            }
+                                        }
+                                        return res;
+                                    })()}
+                                    <i>{a.p}%</i></span>
                                 <progress value={a.p} max="100" min="0"></progress>
                             </div>
                         </div>

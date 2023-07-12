@@ -42,7 +42,7 @@ function IR(){
         const [E, se] = useState(false);
         const img = useRef(0);
         const edit = Array(6).fill(0).map(useRef);
-        const id = ms.get("id") || {};
+        const id = my_id || {};
         const mobile = [
             [<th>Name</th>,<td>{sid.sd('name')}</td>],
             [<th>Artist</th>,<td>{sid.sd('names')}</td>],
@@ -104,7 +104,7 @@ function IR(){
             });
         }
         sidA.push(...sid.sdg('sid'));
-        sidA.push(...Object.values(ms.get("sid")).map(a => {return {feat: a.feat, sid: a.sid}}).filter(a => a.feat).map(a => {a.feat = filter(a.feat).split(', '); return a}).filter(a => a.feat.some(a => sid.sd('names').includes(a))).map(a => a.sid));
+        sidA.push(...ov_s.map(a => {return {feat: a.feat, sid: a.sid}}).filter(a => a.feat).map(a => {a.feat = filter(a.feat).split(', '); return a}).filter(a => a.feat.some(a => sid.sd('names').includes(a))).map(a => a.sid));
         sidA = sidA.filter(a => {
             let not = [];
             if(Array.isArray(sid.sd('aid'))){

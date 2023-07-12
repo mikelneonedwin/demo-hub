@@ -1,7 +1,7 @@
 function IR(){
     if(!ms.get("id")) return location.href = '/signup/';
     const id = ms.get("id");
-    const likes = ms.get("likes")
+    const likes = ms.get("likes");
     function T(){
         const r = Array(5).fill(false).map(useState);
         const [E, se] = useState(false);

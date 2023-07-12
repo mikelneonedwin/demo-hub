@@ -73,7 +73,7 @@ function IR(){
     }
     function SA(){
         const [more, smore] = useState(false);
-        const list = Object.values(ms.get("aid")).filter(a => a.genre == aid.ad('genre') && a.aid != aid);
+        const list = ov_ar.filter(a => a.genre == aid.ad('genre') && a.aid != aid);
         if(list.length == 0) return undefined;
         return [
             <p className="category" onClick={() => smore(!more)}>Similar Artists <span className="symbol">{more ? "step_out" : "step_into"}</span></p>,
